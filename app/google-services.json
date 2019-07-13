@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "412378395886",
+    "firebase_url": "https://feedme-462c9.firebaseio.com",
+    "project_id": "feedme-462c9",
+    "storage_bucket": "feedme-462c9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:412378395886:android:67dddb38b05920f6",
+        "android_client_info": {
+          "package_name": "foodOreder.feedme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "412378395886-hcirsg0agvhpo52qlss1fnb5vsm5eanm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "foodOreder.feedme",
+            "certificate_hash": "252d823ca5c91b5d26a83c6f13a02c9aed581d01"
+          }
+        },
+        {
+          "client_id": "412378395886-mk9mdrbi6hcani44k5g9f5736s0lt4sv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0w-ENlVh0AfeegVp6403xLAPAtnjcXsw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "412378395886-mk9mdrbi6hcani44k5g9f5736s0lt4sv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
