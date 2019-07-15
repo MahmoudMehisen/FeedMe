@@ -49,7 +49,6 @@ public class chatBot extends AppCompatActivity implements AIListener {
     ArrayList<ChatMessage> chatMessages;
     FirebaseRecyclerAdapter<ChatMessage,chat_rec> adapter;
     Boolean flagFab = true;
-
     private AIService aiService;
 
     @Override
@@ -72,7 +71,7 @@ public class chatBot extends AppCompatActivity implements AIListener {
         ref = FirebaseDatabase.getInstance().getReference();
         ref.keepSynced(true);
 
-        final AIConfiguration config = new AIConfiguration("e55bdb5328b4478c9a27cbbdbdb1df75",
+        final AIConfiguration config = new AIConfiguration("c0fe194c25f947dfbb2675f127c6ce32",
                 AIConfiguration.SupportedLanguages.English,
                 AIConfiguration.RecognitionEngine.System);
 
