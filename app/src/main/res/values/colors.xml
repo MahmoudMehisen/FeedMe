@@ -8,6 +8,11 @@
     <color name="colorText2">#757575</color>
     <color name="colorIcon">#FFFFFF</color>
     <color name="colorDivider">#BDBDBD</color>
+    <color name="OverlayBackground">#7f333639</color>
+    <color name="OverlayActionBar">#0e0d0e</color>
+
+
+
 
     // flatt colors
     <color name="fbutton_color_turquoise">#1abc9c</color>
