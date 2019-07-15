@@ -40,7 +40,7 @@ import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
 
-public class chatBot extends AppCompatActivity implements AIListener {
+public class ChatBot extends AppCompatActivity implements AIListener {
     RecyclerView recyclerView;
     EditText editText;
     RelativeLayout addBtn;
@@ -96,7 +96,7 @@ public class chatBot extends AppCompatActivity implements AIListener {
                 System.out.println(message);
                 if (!message.equals("")) {
 
-                    ChatMessage chatMessage = new ChatMessage(message, "user");
+                    ChatMessage chatMessage = new ChatMessage(message, "User");
                     ref.child("chat").push().setValue(chatMessage);
 
                     aiRequest.setQuery(message);
@@ -147,11 +147,11 @@ public class chatBot extends AppCompatActivity implements AIListener {
 
 
                 if (s.toString().trim().length() != 0 && flagFab) {
-                    ImageViewAnimatedChange(chatBot.this, fab_img, img);
+                    ImageViewAnimatedChange(ChatBot.this, fab_img, img);
                     flagFab = false;
 
                 } else if (s.toString().trim().length() == 0) {
-                    ImageViewAnimatedChange(chatBot.this, fab_img, img1);
+                    ImageViewAnimatedChange(ChatBot.this, fab_img, img1);
                     flagFab = true;
 
                 }
@@ -179,7 +179,7 @@ public class chatBot extends AppCompatActivity implements AIListener {
 
             @Override
             protected void onBindViewHolder(@NonNull chat_rec viewHolder, int position, @NonNull ChatMessage model) {
-                if (model.getMsgUser().equals("user")) {
+                if (model.getMsgUser().equals("User")) {
 
 
                     viewHolder.rightText.setText(model.getMsgText());
@@ -261,7 +261,7 @@ public class chatBot extends AppCompatActivity implements AIListener {
         Result result = response.getResult();
 
         String message = result.getResolvedQuery();
-        ChatMessage chatMessage0 = new ChatMessage(message, "user");
+        ChatMessage chatMessage0 = new ChatMessage(message, "User");
         ref.child("chat").push().setValue(chatMessage0);
 
 
