@@ -1,8 +1,8 @@
 package foodOreder.feedme;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,60 +14,54 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
 import foodOreder.feedme.utils.ProgressGenerator;
 
+public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCompleteListener {
 
-public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCompleteListener {
-
-    ActionProcessButton btnSignIn;
+    ActionProcessButton btnSignUp;
     ProgressGenerator progressGenerator;
-    EditText editPhone,editPassword;
+    EditText editPhone,editName,editPassword;
     FirebaseDatabase database;
     DatabaseReference table_user;
-
+    boolean regiser = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signin);
-
+        setContentView(R.layout.activity_sign_up);
 
 
         progressGenerator = new ProgressGenerator(this);
-        btnSignIn = (ActionProcessButton) findViewById(R.id.btnSignIn);
+        btnSignUp = (ActionProcessButton) findViewById(R.id.btnSignUp);
         editPassword = (EditText) findViewById(R.id.editPassword);
         editPhone = (EditText) findViewById(R.id.editPhone);
+        editName = (EditText) findViewById(R.id.editName);
         database = FirebaseDatabase.getInstance();
         table_user = database.getReference("Users");
 
 
-
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
-
-
+            public void onClick(View view) {
                 table_user.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if(dataSnapshot.child(editPhone.getText().toString()).exists()) {
-                            User user = dataSnapshot.child(editPhone.getText().toString()).getValue(User.class);
-                            if (user.getPassword().equals(editPassword.getText().toString())) {
-                                progressGenerator.start(btnSignIn);
-                                btnSignIn.setEnabled(false);
-                                editPassword.setEnabled(false);
-                                editPhone.setEnabled(false);
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Wrong Password", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        else
+                        if(dataSnapshot.child(editPhone.getText().toString()).exists() && regiser ==false)
                         {
-                            Toast.makeText(getApplicationContext(), "User Not Exist", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"Phone Number already register",Toast.LENGTH_SHORT).show();
+                        }
+                        else if(regiser==false)
+                        {
+                            User user = new User(editPassword.getText().toString(),editName.getText().toString());
+                            table_user.child(editPhone.getText().toString()).setValue(user);
+                            progressGenerator.start(btnSignUp);
+                            btnSignUp.setEnabled(false);
+                            editPassword.setEnabled(false);
+                            editPhone.setEnabled(false);
+                            editName.setEnabled(false);
+                            regiser=true;
                         }
 
                     }
@@ -77,7 +71,6 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
 
                     }
                 });
-
             }
         });
 
@@ -86,6 +79,6 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
 
     @Override
     public void onComplete() {
-        Toast.makeText(this, "Done", Toast.LENGTH_LONG).show();
+
     }
 }
