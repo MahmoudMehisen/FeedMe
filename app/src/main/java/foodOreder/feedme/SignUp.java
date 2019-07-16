@@ -1,8 +1,8 @@
 package foodOreder.feedme;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,13 +14,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import foodOreder.feedme.models.User;
 import foodOreder.feedme.utils.ProgressGenerator;
 
 public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCompleteListener {
 
     ActionProcessButton btnSignUp;
     ProgressGenerator progressGenerator;
-    EditText editPhone,editName,editPassword;
+    EditText editPhone, editName, editPassword;
     FirebaseDatabase database;
     DatabaseReference table_user;
     boolean regiser = false;
@@ -48,22 +49,19 @@ public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCom
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if(dataSnapshot.child(editPhone.getText().toString()).exists() && regiser ==false)
-                        {
-                            Toast.makeText(getApplicationContext(),"Phone Number already register",Toast.LENGTH_SHORT).show();
-                        }
-                        else if(regiser==false)
-                        {
-                            User user = new User(editPassword.getText().toString(),editName.getText().toString());
+                        if (dataSnapshot.child(editPhone.getText().toString()).exists() && regiser == false) {
+                            Toast.makeText(getApplicationContext(), "Phone Number already register", Toast.LENGTH_SHORT).show();
+                        } else if (regiser == false) {
+                            User user = new User(editPassword.getText().toString(), editName.getText().toString());
                             table_user.child(editPhone.getText().toString()).setValue(user);
                             progressGenerator.start(btnSignUp);
                             btnSignUp.setEnabled(false);
                             editPassword.setEnabled(false);
                             editPhone.setEnabled(false);
                             editName.setEnabled(false);
-                            regiser=true;
-                        }
+                            regiser = true;
 
+                        }
                     }
 
                     @Override
@@ -79,6 +77,6 @@ public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCom
 
     @Override
     public void onComplete() {
-
+        finish();
     }
 }

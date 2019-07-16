@@ -28,7 +28,6 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-
 import java.util.ArrayList;
 
 import ai.api.AIDataService;
@@ -39,6 +38,7 @@ import ai.api.android.AIService;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
+import foodOreder.feedme.models.ChatMessage;
 
 public class ChatBot extends AppCompatActivity implements AIListener {
     RecyclerView recyclerView;
@@ -47,7 +47,7 @@ public class ChatBot extends AppCompatActivity implements AIListener {
     DatabaseReference ref;
     FirebaseRecyclerOptions<ChatMessage> options;
     ArrayList<ChatMessage> chatMessages;
-    FirebaseRecyclerAdapter<ChatMessage,chat_rec> adapter;
+    FirebaseRecyclerAdapter<ChatMessage, chat_rec> adapter;
     Boolean flagFab = true;
     private AIService aiService;
 
@@ -296,16 +296,16 @@ public class ChatBot extends AppCompatActivity implements AIListener {
     public void onListeningFinished() {
 
     }
-    public static class chat_rec extends RecyclerView.ViewHolder  {
+
+    public static class chat_rec extends RecyclerView.ViewHolder {
 
 
-
-        TextView leftText,rightText;
+        TextView leftText, rightText;
 
         public chat_rec(@NonNull View itemView) {
             super(itemView);
-            leftText = (TextView)itemView.findViewById(R.id.leftText);
-            rightText = (TextView)itemView.findViewById(R.id.rightText);
+            leftText = (TextView) itemView.findViewById(R.id.leftText);
+            rightText = (TextView) itemView.findViewById(R.id.rightText);
 
         }
     }

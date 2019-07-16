@@ -1,8 +1,8 @@
 package foodOreder.feedme.utils;
 
-import com.dd.processbutton.ProcessButton;
-
 import android.os.Handler;
+
+import com.dd.processbutton.ProcessButton;
 
 import java.util.Random;
 
@@ -15,6 +15,7 @@ public class ProgressGenerator {
 
     private OnCompleteListener mListener;
     private int mProgress;
+    private boolean done = false;
 
     public ProgressGenerator(OnCompleteListener listener) {
         mListener = listener;
@@ -30,11 +31,13 @@ public class ProgressGenerator {
                 if (mProgress < 100) {
                     handler.postDelayed(this, generateDelay());
                 } else {
+
                     mListener.onComplete();
                 }
             }
         }, generateDelay());
     }
+
 
     private Random random = new Random();
 

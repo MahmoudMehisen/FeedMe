@@ -1,4 +1,4 @@
-package foodOreder.feedme;
+package foodOreder.feedme.models;
 
 
 public class ChatMessage {
@@ -7,15 +7,14 @@ public class ChatMessage {
     private String msgUser;
 
 
-
-    public ChatMessage(String msgText, String msgUser){
+    public ChatMessage(String msgText, String msgUser) {
         this.msgText = msgText;
         this.msgUser = msgUser;
 
     }
 
 
-    public ChatMessage(){
+    public ChatMessage() {
 
     }
 
