@@ -16,8 +16,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import foodOreder.feedme.Common.Common;
-import foodOreder.feedme.models.User;
-import foodOreder.feedme.utils.ProgressGenerator;
+import foodOreder.feedme.Model.User;
+import foodOreder.feedme.Util.ProgressGenerator;
 
 
 public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCompleteListener {
@@ -55,6 +55,7 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
 
                         if (dataSnapshot.child(editPhone.getText().toString()).exists()) {
                             User user = dataSnapshot.child(editPhone.getText().toString()).getValue(User.class);
+                            user.setPhone(editPhone.getText().toString());
                             if (user.getPassword().equals(editPassword.getText().toString())) {
                                 progressGenerator.start(btnSignIn);
                                 btnSignIn.setEnabled(false);

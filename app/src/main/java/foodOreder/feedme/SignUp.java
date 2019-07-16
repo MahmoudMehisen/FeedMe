@@ -16,8 +16,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import foodOreder.feedme.Common.Common;
-import foodOreder.feedme.models.User;
-import foodOreder.feedme.utils.ProgressGenerator;
+import foodOreder.feedme.Model.User;
+import foodOreder.feedme.Util.ProgressGenerator;
 
 public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCompleteListener {
 

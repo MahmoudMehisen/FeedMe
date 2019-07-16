@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 
 import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.ViewHolder.FoodViewHolder;
-import foodOreder.feedme.models.Food;
+import foodOreder.feedme.Model.Food;
 
 public class FoodList extends AppCompatActivity {
 

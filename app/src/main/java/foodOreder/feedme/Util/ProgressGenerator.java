@@ -1,4 +1,4 @@
-package foodOreder.feedme.utils;
+package foodOreder.feedme.Util;
 
 import android.os.Handler;
 

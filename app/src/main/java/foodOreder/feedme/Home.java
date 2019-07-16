@@ -29,7 +29,7 @@ import com.squareup.picasso.Picasso;
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.ViewHolder.MenuViewHolder;
-import foodOreder.feedme.models.Category;
+import foodOreder.feedme.Model.Category;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

@@ -38,7 +38,7 @@ import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
 import foodOreder.feedme.ViewHolder.ChatViewHolder;
-import foodOreder.feedme.models.ChatMessage;
+import foodOreder.feedme.Model.ChatMessage;
 
 public class ChatBot extends AppCompatActivity implements AIListener {
     RecyclerView recyclerView;

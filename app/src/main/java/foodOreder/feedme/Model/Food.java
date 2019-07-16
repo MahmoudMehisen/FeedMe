@@ -1,4 +1,4 @@
-package foodOreder.feedme.models;
+package foodOreder.feedme.Model;
 
 public class Food {
     private String name;
