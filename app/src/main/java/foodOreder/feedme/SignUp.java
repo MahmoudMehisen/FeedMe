@@ -49,9 +49,9 @@ public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCom
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if (dataSnapshot.child(editPhone.getText().toString()).exists() && regiser == false) {
+                        if (dataSnapshot.child(editPhone.getText().toString()).exists() && !regiser) {
                             Toast.makeText(getApplicationContext(), "Phone Number already register", Toast.LENGTH_SHORT).show();
-                        } else if (regiser == false) {
+                        } else if (!regiser) {
                             User user = new User(editPassword.getText().toString(), editName.getText().toString());
                             table_user.child(editPhone.getText().toString()).setValue(user);
                             progressGenerator.start(btnSignUp);

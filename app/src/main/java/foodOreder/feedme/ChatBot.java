@@ -21,7 +21,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -38,6 +37,7 @@ import ai.api.android.AIService;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
+import foodOreder.feedme.ViewHolder.ChatViewHolder;
 import foodOreder.feedme.models.ChatMessage;
 
 public class ChatBot extends AppCompatActivity implements AIListener {
@@ -47,7 +47,7 @@ public class ChatBot extends AppCompatActivity implements AIListener {
     DatabaseReference ref;
     FirebaseRecyclerOptions<ChatMessage> options;
     ArrayList<ChatMessage> chatMessages;
-    FirebaseRecyclerAdapter<ChatMessage, chat_rec> adapter;
+    FirebaseRecyclerAdapter<ChatMessage, ChatViewHolder> adapter;
     Boolean flagFab = true;
     private AIService aiService;
 
@@ -165,20 +165,20 @@ public class ChatBot extends AppCompatActivity implements AIListener {
             }
         });
 
-        adapter = new FirebaseRecyclerAdapter<ChatMessage, chat_rec>(options) {
+        adapter = new FirebaseRecyclerAdapter<ChatMessage, ChatViewHolder>(options) {
 
 
             @NonNull
             @Override
-            public chat_rec onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+            public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
                 View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.msglist, viewGroup, false);
 
-                return new chat_rec(view);
+                return new ChatViewHolder(view);
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull chat_rec viewHolder, int position, @NonNull ChatMessage model) {
+            protected void onBindViewHolder(@NonNull ChatViewHolder viewHolder, int position, @NonNull ChatMessage model) {
                 if (model.getMsgUser().equals("User")) {
 
 
@@ -297,17 +297,6 @@ public class ChatBot extends AppCompatActivity implements AIListener {
 
     }
 
-    public static class chat_rec extends RecyclerView.ViewHolder {
 
-
-        TextView leftText, rightText;
-
-        public chat_rec(@NonNull View itemView) {
-            super(itemView);
-            leftText = (TextView) itemView.findViewById(R.id.leftText);
-            rightText = (TextView) itemView.findViewById(R.id.rightText);
-
-        }
-    }
 
 }

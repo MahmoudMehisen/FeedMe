@@ -44,6 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Phone Number"
+        android:text="1"
         android:textColorHint="@color/colorIcon"
         android:textColor="@color/colorIcon"
         android:id="@+id/editPhone"
@@ -58,6 +59,7 @@
         <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="1"
             android:hint="Password"
             android:inputType="textPassword"
             android:textColorHint="@color/colorIcon"
