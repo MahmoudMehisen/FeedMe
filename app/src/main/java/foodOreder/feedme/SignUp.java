@@ -1,5 +1,6 @@
 package foodOreder.feedme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.models.User;
 import foodOreder.feedme.utils.ProgressGenerator;
 
@@ -24,7 +26,8 @@ public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCom
     EditText editPhone, editName, editPassword;
     FirebaseDatabase database;
     DatabaseReference table_user;
-    boolean regiser = false;
+    boolean register = false;
+    Intent HomeIntent;
 
 
     @Override
@@ -49,9 +52,9 @@ public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCom
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if (dataSnapshot.child(editPhone.getText().toString()).exists() && !regiser) {
+                        if (dataSnapshot.child(editPhone.getText().toString()).exists() && !register) {
                             Toast.makeText(getApplicationContext(), "Phone Number already register", Toast.LENGTH_SHORT).show();
-                        } else if (!regiser) {
+                        } else if (!register) {
                             User user = new User(editPassword.getText().toString(), editName.getText().toString());
                             table_user.child(editPhone.getText().toString()).setValue(user);
                             progressGenerator.start(btnSignUp);
@@ -59,7 +62,9 @@ public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCom
                             editPassword.setEnabled(false);
                             editPhone.setEnabled(false);
                             editName.setEnabled(false);
-                            regiser = true;
+                            register = true;
+                            HomeIntent = new Intent(SignUp.this, Home.class);
+                            Common.CommonUser = user;
 
                         }
                     }
@@ -77,6 +82,7 @@ public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCom
 
     @Override
     public void onComplete() {
+        startActivity(HomeIntent);
         finish();
     }
 }

@@ -1,5 +1,6 @@
 package foodOreder.feedme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -70,12 +70,15 @@ public class FoodList extends AppCompatActivity {
                 holder.foodName.setText(model.getName());
                 Picasso.with(getApplicationContext()).load(model.getImage()).into(holder.foodImage);
 
-                final Food local = model;
+                final Food food = model;
+                //System.out.println(food.getName());
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-                        Toast.makeText(FoodList.this,""+local.getName(),Toast.LENGTH_SHORT).show();
-                        System.out.println(local.getName());
+                        Intent foodDetail = new Intent(FoodList.this,FoodDetail.class);
+                        foodDetail.putExtra("FoodId",adapter.getRef(position).getKey());
+                        startActivity(foodDetail);
+
                     }
                 });
 
