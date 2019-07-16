@@ -86,6 +86,14 @@ public class Home extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent carIntent = new Intent(Home.this,Cart.class);
+                startActivity(carIntent);
+            }
+        });
+
         loadMenu();
     }
 

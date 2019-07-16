@@ -9,10 +9,9 @@ public class User {
     }
 
 
-    public User(String Password, String Name, String Phone) {
+    public User(String Password, String Name) {
         this.Password = Password;
         this.Name = Name;
-        this.Phone = Phone;
     }
 
     public void setPhone(String phone) {

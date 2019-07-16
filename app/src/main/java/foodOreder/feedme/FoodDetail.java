@@ -5,8 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.firebase.database.DataSnapshot;
@@ -16,7 +18,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import foodOreder.feedme.Database.Database;
 import foodOreder.feedme.Model.Food;
+import foodOreder.feedme.Model.Order;
 
 public class FoodDetail extends AppCompatActivity {
 
@@ -29,6 +33,8 @@ public class FoodDetail extends AppCompatActivity {
     String foodId;
     FirebaseDatabase database;
     DatabaseReference foods;
+
+    Food currentFood;
 
 
     @Override
@@ -50,6 +56,20 @@ public class FoodDetail extends AppCompatActivity {
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppbar);
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppbar);
 
+        btnCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Database(getApplicationContext()).addToCart(new Order(
+                        foodId,
+                        currentFood.getName(),
+                        numberButton.getNumber(),
+                        currentFood.getPrice(),
+                        currentFood.getDiscount()
+                ));
+                Toast.makeText(getApplicationContext(),"Added to Cart",Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         if (getIntent() != null) {
             foodId = getIntent().getStringExtra("FoodId");
@@ -67,12 +87,12 @@ public class FoodDetail extends AppCompatActivity {
         foods.child(foodId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Food food = dataSnapshot.getValue(Food.class);
+                currentFood = dataSnapshot.getValue(Food.class);
 
-                Picasso.with(getApplicationContext()).load(food.getImage()).into(foodImage);
-                collapsingToolbarLayout.setTitle(food.getName());
-                foodPrice.setText(food.getPrice());
-                foodDescription.setText(food.getDescription());
+                Picasso.with(getApplicationContext()).load(currentFood.getImage()).into(foodImage);
+                collapsingToolbarLayout.setTitle(currentFood.getName());
+                foodPrice.setText(currentFood.getPrice());
+                foodDescription.setText(currentFood.getDescription());
 
 
             }
