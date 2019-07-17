@@ -43,7 +43,8 @@
                     <TextView
                         android:id="@+id/total"
                         android:textColor="@color/colorIcon"
-                        android:text="$10,000"
+                        android:layout_marginLeft="4dp"
+                        android:text="$0"
                         android:textSize="24sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
@@ -61,6 +62,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:text="Place Order"
+                    android:background="@color/fbutton_color_green_sea"
                     android:textColor="@color/colorIcon" />
 
 
