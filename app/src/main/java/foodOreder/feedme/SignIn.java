@@ -1,11 +1,13 @@
 package foodOreder.feedme;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dd.processbutton.iml.ActionProcessButton;
@@ -28,6 +30,7 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
     FirebaseDatabase database;
     DatabaseReference table_user;
     Intent HomeIntent;
+    TextView slogan;
 
 
     @Override
@@ -42,7 +45,9 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
         editPhone = (EditText) findViewById(R.id.editPhone);
         database = FirebaseDatabase.getInstance();
         table_user = database.getReference("Users");
-
+        slogan = (TextView) findViewById(R.id.slogan);
+        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/comics.ttf");
+        slogan.setTypeface(face);
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
