@@ -1,40 +1,46 @@
 package foodOreder.feedme.Model;
 
 public class User {
-    private String Password;
-    private String Name;
-    private String Phone;
+    private String name,password,phone,isStaff;
+
+    public User(String name, String password) {
+        this.name = name;
+        this.password = password;
+        this.isStaff= "false";
+    }
 
     public User() {
     }
 
-
-    public User(String Password, String Name) {
-        this.Password = Password;
-        this.Name = Name;
-    }
-
     public void setPhone(String phone) {
-        Phone = phone;
+        this.phone = phone;
     }
 
-    public String getPhone() {
-        return Phone;
+    public void setIsStaff(String isStaff) {
+        this.isStaff = isStaff;
     }
 
-    public String getPassword() {
-        return Password;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
-    public void setPassword(String Password) {
-        this.Password = Password;
+    public String getPassword() {
+        return password;
     }
 
-    public void setName(String Name) {
-        Name = Name;
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getIsStaff() {
+        return isStaff;
     }
 }
