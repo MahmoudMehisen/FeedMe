@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -25,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.ViewHolder.FoodViewHolder;
 import foodOreder.feedme.Model.Food;
@@ -65,9 +67,15 @@ public class FoodList extends AppCompatActivity {
         {
             categoryId=getIntent().getStringExtra("CategoryId");
         }
-        if(!categoryId.isEmpty())
+        if(!categoryId.isEmpty() && categoryId != null)
         {
-            loadListFood(categoryId);
+            if(Common.isConnectedToInternet(getBaseContext())){
+                loadListFood(categoryId);
+            }
+            else{
+                Toast.makeText(FoodList.this, "Please Check Your Internet Connection !!", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
         materialSearchBar = (MaterialSearchBar) findViewById(R.id.searchBar);

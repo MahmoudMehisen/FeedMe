@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -86,7 +87,15 @@ public class Home extends AppCompatActivity
             }
         });
 
-        loadMenu();
+
+
+        if(Common.isConnectedToInternet(this)){
+            loadMenu();
+        }
+        else{
+            Toast.makeText(this, "Please Check Your Internet Connection !!", Toast.LENGTH_SHORT).show();
+            return;
+        }
     }
 
     private void loadMenu() {
@@ -142,6 +151,9 @@ public class Home extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.refresh){
+            loadMenu();
+        }
         return super.onOptionsItemSelected(item);
     }
 

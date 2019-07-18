@@ -26,5 +26,6 @@
     <string name="cart">Cart</string>
     <string name="order">Order</string>
     <string name="sign_out">Sign Out</string>
+    <string name="refresh">Refresh</string>
 
 </resources>

@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,7 +66,12 @@ public class Cart extends AppCompatActivity {
         btnPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAlertDialog();
+                if(cart.size()>0){
+                    showAlertDialog();
+                }
+                else {
+                    Toast.makeText(Cart.this, "Your Cart is Empty !!!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -120,14 +126,12 @@ public class Cart extends AppCompatActivity {
 
     private void loadListFood() {
 
-        cart  =  new Database(getApplicationContext()).getCart();
-
-
-
-
+        cart  =  new Database(this).getCart();
         adapter = new CartAdapter(cart,this);
+        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
+        //Calculate Total Price
         int total = 0;
         for(Order order:cart )
         {
@@ -136,6 +140,28 @@ public class Cart extends AppCompatActivity {
             NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
             totalPrice.setText(fmt.format(total));
         }
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if(item.getTitle().equals(Common.DELETE)){
+            deleteCart(item.getOrder());
+        }
+        return true;
+    }
+
+    private void deleteCart(int position) {
+        //remove item bu position
+        cart.remove(position);
+        //delete old data form SQLite
+        new Database(this).cleanCart();
+        //udpate new data from list<order> to SQLite
+        for(Order item:cart){
+            new Database(this).addToCart(item);
+        }
+        //Refresh
+        loadListFood();
 
     }
 }
