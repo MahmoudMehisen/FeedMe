@@ -30,6 +30,7 @@ import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.Model.Category;
 import foodOreder.feedme.ViewHolder.MenuViewHolder;
+import io.paperdb.Paper;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -55,6 +56,9 @@ public class Home extends AppCompatActivity
         //Init Firebase
         database = FirebaseDatabase.getInstance();
         category = database.getReference("Category");
+
+        Paper.init(this);
+
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -174,6 +178,12 @@ public class Home extends AppCompatActivity
             startActivity(orderIntent);
 
         } else if (id == R.id.nav_log_out) {
+
+            //Delete remember user and password
+            Paper.book().destroy();
+
+
+
             Intent signIn = new Intent(Home.this,SignIn.class);
             signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(signIn);

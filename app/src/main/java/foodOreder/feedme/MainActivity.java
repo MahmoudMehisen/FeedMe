@@ -1,12 +1,26 @@
 package foodOreder.feedme;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import foodOreder.feedme.Common.Common;
+import foodOreder.feedme.Model.User;
+import foodOreder.feedme.Util.ProgressGenerator;
+import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +48,59 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //check remember
+        String user = Paper.book().read(Common.USER_KEY);
+        String pwd = Paper.book().read(Common.PWD_KEY);
+        if (user != null && pwd != null) {
+            if (!user.isEmpty() && !pwd.isEmpty()) {
+                login(user, pwd);
+            }
+        }
+    }
 
+    private void login(final String phone, final String pwd) {
+        //Init Firebase
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference table_user = database.getReference("Users");
+
+        if (Common.isConnectedToInternet(getBaseContext())) {
+            table_user.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    //check if user is not exist in database
+                    if (dataSnapshot.child(phone).exists()) {
+                        //get user information
+                        User user = dataSnapshot.child(phone).getValue(User.class);
+                        user.setPhone(phone);
+                        if (user.getPassword().equals(pwd)) {
+//                            progressGenerator.start(btnSignIn);
+                            btnSignIn.setEnabled(false);
+//                            editPassword.setEnabled(false);
+//                            editPhone.setEnabled(false);
+                            Intent HomeIntent = new Intent(MainActivity.this, Home.class);
+                            Common.CommonUser = user;
+                            startActivity(HomeIntent);
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Wrong Password", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "User Not Exist", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        } else {
+            Toast.makeText(MainActivity.this, "Please Check Your Internet Connection !!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initializeUI() {
@@ -45,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
         Typeface face = Typeface.createFromAsset(getAssets(), "fonts/comics.ttf");
         slogan.setTypeface(face);
 
-
+        //Init Paper
+        Paper.init(this);
     }
 
 }
