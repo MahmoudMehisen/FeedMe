@@ -27,5 +27,6 @@
     <string name="order">Order</string>
     <string name="sign_out">Sign Out</string>
     <string name="refresh">Refresh</string>
+    <string name="forgot_pwd"><u>Forgot Password ?</u></string>
 
 </resources>

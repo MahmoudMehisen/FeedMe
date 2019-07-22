@@ -71,16 +71,39 @@
             app:met_singleLineEllipsis="true"
             />
 
-        <com.rey.material.widget.CheckBox
-            android:id="@+id/ckbRemember"
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Material.Drawable.CheckBox"
-            android:text="Remember me"
-            android:textColor="@color/white"
-            app:cpd_strokeColor = "@color/white"
-            android:gravity="center_vertical"
-            />
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.rey.material.widget.CheckBox
+                android:id="@+id/ckbRemember"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/Material.Drawable.CheckBox"
+                android:text="Remember me"
+                android:textColor="@color/white"
+                app:cpd_strokeColor = "@color/white"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                />
+
+
+            <TextView
+                android:id="@+id/txtForgotPWD"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/forgot_pwd"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"
+
+                />
+
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout

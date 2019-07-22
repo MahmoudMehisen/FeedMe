@@ -86,6 +86,22 @@
 
             />
 
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Secure Code"
+            android:inputType="text"
+            android:textColorHint="@color/colorIcon"
+            android:textColor="@color/colorIcon"
+            android:id="@+id/editSecureCode"
+            app:met_baseColor="@color/colorIcon"
+            app:met_floatingLabel="highlight"
+            app:met_maxCharacters="11"
+            app:met_primaryColor="@color/colorIcon"
+            app:met_singleLineEllipsis="true"
+
+            />
+
 
     </LinearLayout>
 

@@ -1,11 +1,15 @@
 package foodOreder.feedme;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -18,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Model.User;
@@ -33,7 +38,7 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
     FirebaseDatabase database;
     DatabaseReference table_user;
     Intent HomeIntent;
-    TextView slogan;
+    TextView slogan, txtForgotPwd;
     com.rey.material.widget.CheckBox ckbRemember;
 
 
@@ -47,6 +52,7 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
         btnSignIn = (ActionProcessButton) findViewById(R.id.btnSignIn);
         editPassword = (EditText) findViewById(R.id.editPassword);
         editPhone = (EditText) findViewById(R.id.editPhone);
+        txtForgotPwd = (TextView) findViewById(R.id.txtForgotPWD);
 
         //Init Firebase
         database = FirebaseDatabase.getInstance();
@@ -59,6 +65,16 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
 
         //Init paper
         Paper.init(this);
+
+
+        txtForgotPwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showForgotPwdDialog();
+            }
+        });
+
+
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +128,57 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
                 }
             }
         });
+    }
+
+    private void showForgotPwdDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Forgot Password");
+        builder.setMessage("Enter Your Secure Code");
+
+        LayoutInflater infalter = this.getLayoutInflater();
+        View forgot_view = infalter.inflate(R.layout.forgot_password_layout, null);
+
+        builder.setView(forgot_view);
+        builder.setIcon(R.drawable.ic_security_black_24dp);
+
+        MaterialEditText edtPhone = (MaterialEditText)forgot_view.findViewById(R.id.editPhone);
+        final MaterialEditText edtSecureCode = (MaterialEditText)forgot_view.findViewById(R.id.editSecureCode);
+
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                //check if user available
+                table_user.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.child(editPhone.getText().toString()).getValue(User.class);
+
+                        if(user.getSecureCode().equals(edtSecureCode.getText().toString())){
+                            Toast.makeText(SignIn.this, "Your Password is "+user.getPassword(), Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(SignIn.this, "Wrong Secure Code !!!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+        });
+
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.show();
+
     }
 
     @Override
