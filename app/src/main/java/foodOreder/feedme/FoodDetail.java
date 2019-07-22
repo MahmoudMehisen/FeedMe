@@ -1,6 +1,5 @@
 package foodOreder.feedme;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -17,7 +16,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.stepstone.apprating.AppRatingDialog;
@@ -194,19 +192,21 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     public void onPositiveButtonClicked(final int value, @NotNull String comments) {
         //get rating and upload to Firebase
         final Rating rating = new Rating(Common.CommonUser.getPhone(), foodId, String.valueOf(value), comments);
-        ratingTbl.child(Common.CommonUser.getPhone()).addValueEventListener(new ValueEventListener() {
+        final String ratingId = Common.CommonUser.getPhone()+"-"+rating.getFoodId();
+
+        ratingTbl.child(ratingId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(Common.CommonUser.getPhone()).exists()){
+                if(dataSnapshot.child(ratingId).exists() ){
                     //Remove old value
-                    ratingTbl.child(Common.CommonUser.getPhone()).removeValue();
+                    ratingTbl.child(ratingId).removeValue();
 
                     //update new value
-                    ratingTbl.child(Common.CommonUser.getPhone()).setValue(rating);
+                    ratingTbl.child(ratingId).setValue(rating);
                 }
                 else{
                     //update new value
-                    ratingTbl.child(Common.CommonUser.getPhone()).setValue(rating);
+                    ratingTbl.child(ratingId).setValue(rating);
                 }
                 Toast.makeText(FoodDetail.this, "Thank you for submitting your feedback", Toast.LENGTH_SHORT).show();
             }

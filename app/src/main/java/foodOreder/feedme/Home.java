@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -28,7 +29,9 @@ import com.squareup.picasso.Picasso;
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.Model.Category;
+import foodOreder.feedme.Service.ListenOrder;
 import foodOreder.feedme.ViewHolder.MenuViewHolder;
+import io.paperdb.Paper;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -158,7 +161,7 @@ public class Home extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.refresh){
+        if(item.getItemId() == R.id.refreshBtn){
             loadMenu();
         }
         return super.onOptionsItemSelected(item);
