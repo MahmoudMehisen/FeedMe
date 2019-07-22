@@ -1,12 +1,21 @@
 package foodOreder.feedme.Model;
 
 public class User {
-    private String name,password,phone,isStaff;
+    private String name,password,phone,isStaff, SecureCode;
 
-    public User(String name, String password) {
+    public String getSecureCode() {
+        return SecureCode;
+    }
+
+    public void setSecureCode(String secureCode) {
+        SecureCode = secureCode;
+    }
+
+    public User(String name, String password, String SecureCode) {
         this.name = name;
         this.password = password;
         this.isStaff= "false";
+        this.SecureCode = SecureCode;
     }
 
     public User() {

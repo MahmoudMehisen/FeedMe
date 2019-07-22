@@ -94,9 +94,9 @@ public class Home extends AppCompatActivity
 
         loadMenu();
 
-        // register service
-        Intent sevice = new Intent(Home.this, ListenOrder.class);
-        startService(sevice);
+        // Register service
+        Intent service = new Intent(Home.this, ListenOrder.class);
+        startService(service);
 
 
         if(Common.isConnectedToInternet(this)){
@@ -107,6 +107,10 @@ public class Home extends AppCompatActivity
             return;
         }
     }
+
+
+
+
 
     private void loadMenu() {
 

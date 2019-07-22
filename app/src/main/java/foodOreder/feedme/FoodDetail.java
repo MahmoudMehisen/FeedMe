@@ -79,7 +79,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         btnRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shwoRatingDialog();
+                showRatingDialog();
             }
         });
 
@@ -141,7 +141,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         });
     }
 
-    private void shwoRatingDialog() {
+    private void showRatingDialog() {
         new AppRatingDialog.Builder()
                 .setPositiveButtonText("Submit")
                 .setNegativeButtonText("Cancel")
@@ -208,13 +208,14 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                     //update new value
                     ratingTbl.child(ratingId).setValue(rating);
                 }
-                Toast.makeText(FoodDetail.this, "Thank you for submitting your feedback", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
+
         });
+        Toast.makeText(FoodDetail.this, "Thank you for submitting your feedback", Toast.LENGTH_SHORT).show();
     }
 }

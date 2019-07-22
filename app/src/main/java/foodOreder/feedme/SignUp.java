@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Model.User;
@@ -26,7 +27,7 @@ public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCom
 
     ActionProcessButton btnSignUp;
     ProgressGenerator progressGenerator;
-    EditText editPhone, editName, editPassword;
+    MaterialEditText editPhone, editName, editPassword, editSecureCode;
     FirebaseDatabase database;
     DatabaseReference table_user;
     boolean register = false;
@@ -42,9 +43,10 @@ public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCom
 
         progressGenerator = new ProgressGenerator(this);
         btnSignUp = (ActionProcessButton) findViewById(R.id.btnSignUp);
-        editPassword = (EditText) findViewById(R.id.editPassword);
-        editPhone = (EditText) findViewById(R.id.editPhone);
-        editName = (EditText) findViewById(R.id.editName);
+        editPassword = (MaterialEditText) findViewById(R.id.editPassword);
+        editPhone = (MaterialEditText) findViewById(R.id.editPhone);
+        editName = (MaterialEditText) findViewById(R.id.editName);
+        editSecureCode = (MaterialEditText) findViewById(R.id.editSecureCode);
         database = FirebaseDatabase.getInstance();
         table_user = database.getReference("Users");
         slogan = (TextView) findViewById(R.id.slogan);
@@ -69,7 +71,7 @@ public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCom
                             if (dataSnapshot.child(editPhone.getText().toString()).exists() && !register) {
                                 Toast.makeText(getApplicationContext(), "Phone Number already register", Toast.LENGTH_SHORT).show();
                             } else if (!register) {
-                                User user = new User(editPassword.getText().toString(), editName.getText().toString());
+                                User user = new User(editPassword.getText().toString(), editName.getText().toString(), editSecureCode.getText().toString());
                                 table_user.child(editPhone.getText().toString()).setValue(user);
                                 progressGenerator.start(btnSignUp);
                                 btnSignUp.setEnabled(false);
