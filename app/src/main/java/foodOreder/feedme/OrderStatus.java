@@ -37,20 +37,24 @@ public class OrderStatus extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         requests = database.getReference("Requests");
 
-        recyclerView = (RecyclerView)findViewById(R.id.listOrders);
+        recyclerView = (RecyclerView) findViewById(R.id.listOrders);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        loadOrders(Common.CommonUser.getPhone());
 
+        if (getIntent().getStringExtra("userPhone") == null)
+            loadOrders(Common.CommonUser.getPhone());
+        else
+            loadOrders(getIntent().getStringExtra("userPhone"));
 
 
 
     }
 
     private void loadOrders(String phone) {
-        options  = new FirebaseRecyclerOptions.Builder<Request>()
+
+        options = new FirebaseRecyclerOptions.Builder<Request>()
                 .setQuery(requests.orderByChild("phone").equalTo(phone), Request.class)
                 .build();
         adapter = new FirebaseRecyclerAdapter<Request, OrderViewHolder>(options) {
@@ -58,29 +62,22 @@ public class OrderStatus extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull Request model) {
 
                 holder.orderId.setText(adapter.getRef(position).getKey());
-                holder.orderStatus.setText(convertCodeToStatus(model.getStatus()));
+                holder.orderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
                 holder.orderPhone.setText(model.getPhone());
                 holder.orderAdress.setText(model.getAddress());
+
             }
 
             @NonNull
             @Override
             public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
                 View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.order_layout, viewGroup, false);
-                return new  OrderViewHolder(view);
+                return new OrderViewHolder(view);
             }
         };
         recyclerView.setAdapter(adapter);
         adapter.startListening();
 
     }
-    private String convertCodeToStatus(String status)
-    {
-        if(status.equals("0"))
-            return "Placed";
-        else if(status.equals("1"))
-            return "In my way";
-        else
-            return "Shipped";
-    }
+
 }

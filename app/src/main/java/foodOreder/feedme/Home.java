@@ -28,6 +28,7 @@ import com.squareup.picasso.Picasso;
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.Model.Category;
+import foodOreder.feedme.Service.ListenOrder;
 import foodOreder.feedme.ViewHolder.MenuViewHolder;
 
 public class Home extends AppCompatActivity
@@ -87,6 +88,10 @@ public class Home extends AppCompatActivity
         });
 
         loadMenu();
+
+        // register service
+        Intent sevice = new Intent(Home.this, ListenOrder.class);
+        startService(sevice);
     }
 
     private void loadMenu() {
