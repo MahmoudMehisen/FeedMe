@@ -1,5 +1,6 @@
 package foodOreder.feedme;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -55,36 +56,45 @@ public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCom
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                table_user.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(Common.isConnectedToInternet(getBaseContext())) {
+                    /*
+                    final ProgressDialog mDialog = new ProgressDialog(SignUp.this);
+                    mDialog.setMessage("Please Wait...");
+                    mDialog.show();
+                    */
+                    table_user.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if (dataSnapshot.child(editPhone.getText().toString()).exists() && !register) {
-                            Toast.makeText(getApplicationContext(), "Phone Number already register", Toast.LENGTH_SHORT).show();
-                        } else if (!register) {
-                            User user = new User(editPassword.getText().toString(), editName.getText().toString());
-                            table_user.child(editPhone.getText().toString()).setValue(user);
-                            progressGenerator.start(btnSignUp);
-                            btnSignUp.setEnabled(false);
-                            editPassword.setEnabled(false);
-                            editPhone.setEnabled(false);
-                            editName.setEnabled(false);
-                            register = true;
-                            HomeIntent = new Intent(SignUp.this, Home.class);
-                            Common.CommonUser = user;
+                            if (dataSnapshot.child(editPhone.getText().toString()).exists() && !register) {
+                                Toast.makeText(getApplicationContext(), "Phone Number already register", Toast.LENGTH_SHORT).show();
+                            } else if (!register) {
+                                User user = new User(editPassword.getText().toString(), editName.getText().toString());
+                                table_user.child(editPhone.getText().toString()).setValue(user);
+                                progressGenerator.start(btnSignUp);
+                                btnSignUp.setEnabled(false);
+                                editPassword.setEnabled(false);
+                                editPhone.setEnabled(false);
+                                editName.setEnabled(false);
+                                register = true;
+                                HomeIntent = new Intent(SignUp.this, Home.class);
+                                Common.CommonUser = user;
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
                         }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                    });
+                }
+                else{
+                    Toast.makeText(SignUp.this, "Please Check Your Connection !!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
         });
-
-
     }
 
     @Override

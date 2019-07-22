@@ -28,7 +28,6 @@ import com.squareup.picasso.Picasso;
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.Model.Category;
-import foodOreder.feedme.Service.ListenOrder;
 import foodOreder.feedme.ViewHolder.MenuViewHolder;
 
 public class Home extends AppCompatActivity
@@ -55,6 +54,9 @@ public class Home extends AppCompatActivity
         //Init Firebase
         database = FirebaseDatabase.getInstance();
         category = database.getReference("Category");
+
+        Paper.init(this);
+
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -92,6 +94,15 @@ public class Home extends AppCompatActivity
         // register service
         Intent sevice = new Intent(Home.this, ListenOrder.class);
         startService(sevice);
+
+
+        if(Common.isConnectedToInternet(this)){
+            loadMenu();
+        }
+        else{
+            Toast.makeText(this, "Please Check Your Internet Connection !!", Toast.LENGTH_SHORT).show();
+            return;
+        }
     }
 
     private void loadMenu() {
@@ -147,6 +158,9 @@ public class Home extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.refresh){
+            loadMenu();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -167,6 +181,12 @@ public class Home extends AppCompatActivity
             startActivity(orderIntent);
 
         } else if (id == R.id.nav_log_out) {
+
+            //Delete remember user and password
+            Paper.book().destroy();
+
+
+
             Intent signIn = new Intent(Home.this,SignIn.class);
             signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(signIn);
