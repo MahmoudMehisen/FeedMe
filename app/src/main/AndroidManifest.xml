@@ -9,7 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".OrderStatus"></activity>
+        <service
+            android:name=".Service.ListenOrder"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity android:name=".OrderStatus" />
         <activity android:name=".Cart" />
         <activity android:name=".FoodDetail" />
         <activity android:name=".FoodList" />
@@ -18,7 +23,7 @@
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SignIn" />
-        <activity android:name=".SignUp"/>
+        <activity android:name=".SignUp" />
         <activity android:name=".ChatBot" />
         <activity android:name=".MainActivity">
             <intent-filter>
