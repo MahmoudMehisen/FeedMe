@@ -2,12 +2,11 @@ package foodOreder.feedme;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -16,12 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -30,17 +26,9 @@ import java.util.Locale;
 
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Database.Database;
-import foodOreder.feedme.Model.MyResponse;
-import foodOreder.feedme.Model.Notification;
 import foodOreder.feedme.Model.Order;
 import foodOreder.feedme.Model.Request;
-import foodOreder.feedme.Model.Sender;
-import foodOreder.feedme.Model.Token;
-import foodOreder.feedme.Remote.APIService;
 import foodOreder.feedme.ViewHolder.CartAdapter;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Cart extends AppCompatActivity {
 
@@ -58,15 +46,11 @@ public class Cart extends AppCompatActivity {
 
     CartAdapter adapter ;
 
-    APIService mService;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
-
-        mService = Common.getFCMService();
 
 
         database = FirebaseDatabase.getInstance();
@@ -105,6 +89,9 @@ public class Cart extends AppCompatActivity {
         alertDialog.setTitle("One more step!");
         alertDialog.setMessage("Enter your address: ");
 
+        LayoutInflater inflater = this.getLayoutInflater();
+        View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
+
         final EditText editAdress = new EditText(Cart.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
           LinearLayout.LayoutParams.MATCH_PARENT,
@@ -112,6 +99,12 @@ public class Cart extends AppCompatActivity {
         );
         editAdress.setLayoutParams(lp);
         alertDialog.setView(editAdress);
+
+
+        MaterialEditText edtAddress = (MaterialEditText)order_address_comment.findViewById(R.id.edtAddress);
+        final MaterialEditText edtComment = (MaterialEditText)order_address_comment.findViewById(R.id.edtComment);
+
+
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
 
         alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -122,17 +115,15 @@ public class Cart extends AppCompatActivity {
                         Common.currentUser.getName(),
                         editAdress.getText().toString(),
                         totalPrice.getText().toString(),
+                        "0",
+                        edtComment.getText().toString(),
                         cart
-
                 );
-                String orderNumber = String.valueOf(System.currentTimeMillis());
                 requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
 
                 new Database(getApplicationContext()).cleanCart();
-                sendNotificationOrder(orderNumber);
+                Toast.makeText(Cart.this,"Thank you , Order Place",Toast.LENGTH_SHORT).show();
                 finish();
-
-
 
             }
         });
@@ -143,58 +134,6 @@ public class Cart extends AppCompatActivity {
             }
         });
         alertDialog.show();
-
-    }
-
-    private void sendNotificationOrder(final String orderNumber) {
-        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
-        Query data = tokens.orderByChild("isServerToken").equalTo(true);
-        data.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot postSnapShot:dataSnapshot.getChildren())
-                {
-                    Token serverToken = postSnapShot.getValue(Token.class);
-                    Notification notification = new Notification("You have new order "+orderNumber,"Feed Me");
-                    Sender content = new Sender(serverToken.getToken(),notification);
-
-                    mService.sendNorification(content)
-                            .enqueue(new Callback<MyResponse>() {
-                                @Override
-                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-
-                                    if(response.code()==200) {
-                                        if (response.body().success == 1) {
-                                            Toast.makeText(getApplicationContext(), "Thank you , Order Place", Toast.LENGTH_SHORT).show();
-                                            finish();
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), "Failed !!!", Toast.LENGTH_SHORT).show();
-                                            finish();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Toast.makeText(getApplicationContext(), "Failed !", Toast.LENGTH_SHORT).show();
-                                        finish();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<MyResponse> call, Throwable t) {
-                                    Log.e("ERROR",t.getMessage());
-
-                                }
-                            });
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
     }
 

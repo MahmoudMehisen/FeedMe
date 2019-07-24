@@ -10,15 +10,23 @@
             android:icon="@drawable/ic_restaurant_black_24dp"
             android:title="@string/menu"
             android:iconTint="@android:color/white"/>
+
         <item
             android:id="@+id/nav_cart"
             android:icon="@drawable/ic_shopping_cart_black_24dp"
             android:title="@string/cart"
             android:iconTint="@android:color/white"/>
+
         <item
             android:id="@+id/nav_order"
             android:icon="@drawable/ic_access_time_black_24dp"
             android:title="@string/order"
+            android:iconTint="@android:color/white"/>
+
+        <item
+            android:id="@+id/nav_change_pwd"
+            android:icon="@drawable/ic_security_black_24dp"
+            android:title="Change Password"
             android:iconTint="@android:color/white"/>
 
         <item

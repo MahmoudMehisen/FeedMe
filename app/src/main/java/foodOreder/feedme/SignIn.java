@@ -84,7 +84,7 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
                     mDialog.setMessage("Please Wait...");
                     mDialog.show();
 */
-                    table_user.addValueEventListener(new ValueEventListener() {
+                    table_user.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.child(editPhone.getText().toString()).exists()) {
@@ -102,6 +102,10 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
                                     editPhone.setEnabled(false);
                                     HomeIntent = new Intent(SignIn.this, Home.class);
                                     Common.currentUser = user;
+
+
+                                    table_user.removeEventListener(this);
+
 
 
                                 } else {

@@ -46,7 +46,7 @@
             android:layout_weight="2"
             android:text="Sing Up"
             android:textColor="@color/colorIcon"
-
+            fbutton:buttonColor="@color/btnSignIn"
             />
 
         <info.hoang8f.widget.FButton
@@ -57,6 +57,7 @@
             android:layout_weight="2"
             android:text="Sing In"
             android:textColor="@color/colorIcon"
+            fbutton:buttonColor="@color/btnSignIn"
             />
 
 
