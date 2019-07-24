@@ -1,6 +1,5 @@
 package foodOreder.feedme;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Model.User;
-import foodOreder.feedme.Util.ProgressGenerator;
 import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity {
@@ -79,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 //                            editPassword.setEnabled(false);
 //                            editPhone.setEnabled(false);
                             Intent HomeIntent = new Intent(MainActivity.this, Home.class);
-                            Common.CommonUser = user;
+                            Common.currentUser = user;
                             startActivity(HomeIntent);
                             finish();
                         } else {

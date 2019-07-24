@@ -24,12 +24,13 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
 
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.Model.Category;
-import foodOreder.feedme.Service.ListenOrder;
+import foodOreder.feedme.Model.Token;
 import foodOreder.feedme.ViewHolder.MenuViewHolder;
 import io.paperdb.Paper;
 
@@ -75,7 +76,7 @@ public class Home extends AppCompatActivity
         //set name for user
         View headerView = navigationView.getHeaderView(0);
         txtFullName = (TextView) headerView.findViewById(R.id.txtFullName);
-        txtFullName.setText(Common.CommonUser.getName());
+        txtFullName.setText(Common.currentUser.getName());
 
 
         //Load Menu
@@ -94,10 +95,6 @@ public class Home extends AppCompatActivity
 
         loadMenu();
 
-        // Register service
-        Intent service = new Intent(Home.this, ListenOrder.class);
-        startService(service);
-
 
         if(Common.isConnectedToInternet(this)){
             loadMenu();
@@ -106,10 +103,17 @@ public class Home extends AppCompatActivity
             Toast.makeText(this, "Please Check Your Internet Connection !!", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        updateToken(FirebaseInstanceId.getInstance().getToken());
+
     }
 
-
-
+    private void updateToken(String token) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference("Tokens");
+        Token data = new Token(token,false);
+        tokens.child(Common.currentUser.getPhone()).setValue(data);
+    }
 
 
     private void loadMenu() {

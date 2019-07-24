@@ -1,17 +1,14 @@
 package foodOreder.feedme;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -104,7 +101,7 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
                                     editPassword.setEnabled(false);
                                     editPhone.setEnabled(false);
                                     HomeIntent = new Intent(SignIn.this, Home.class);
-                                    Common.CommonUser = user;
+                                    Common.currentUser = user;
 
 
                                 } else {

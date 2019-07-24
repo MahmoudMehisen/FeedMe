@@ -191,8 +191,8 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     @Override
     public void onPositiveButtonClicked(final int value, @NotNull String comments) {
         //get rating and upload to Firebase
-        final Rating rating = new Rating(Common.CommonUser.getPhone(), foodId, String.valueOf(value), comments);
-        final String ratingId = Common.CommonUser.getPhone()+"-"+rating.getFoodId();
+        final Rating rating = new Rating(Common.currentUser.getPhone(), foodId, String.valueOf(value), comments);
+        final String ratingId = Common.currentUser.getPhone()+"-"+rating.getFoodId();
 
         ratingTbl.child(ratingId).addValueEventListener(new ValueEventListener() {
             @Override
