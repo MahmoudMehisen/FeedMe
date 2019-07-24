@@ -273,7 +273,7 @@ public class Home extends AppCompatActivity
                     }
                     else{
                         waitingDialog.dismiss();
-                        Toast.makeText(Home.this, "Passwords doesn't match !!!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Home.this, "Passwords don't match !!!", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{
