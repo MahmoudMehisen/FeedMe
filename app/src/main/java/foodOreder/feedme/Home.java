@@ -254,7 +254,7 @@ public class Home extends AppCompatActivity
                         PasswordUpdate.put("password", edtNewPassword.getText().toString());
 
                         //make update
-                        DatabaseReference user = FirebaseDatabase.getInstance().getReference("User");
+                        DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users");
                         user.child(Common.currentUser.getPhone())
                             .updateChildren(PasswordUpdate)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -273,12 +273,12 @@ public class Home extends AppCompatActivity
                     }
                     else{
                         waitingDialog.dismiss();
-                        Toast.makeText(Home.this, "New password doesn't match", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Home.this, "Passwords doesn't match !!!", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{
                     waitingDialog.dismiss();
-                    Toast.makeText(Home.this, "Invalid password, please check your pasword and try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Home.this, "Invalid password !!, please check your password and try again", Toast.LENGTH_SHORT).show();
                 }
 
             }
