@@ -39,6 +39,7 @@ import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Database.Database;
 import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.Model.Food;
+import foodOreder.feedme.Model.Order;
 import foodOreder.feedme.ViewHolder.FoodViewHolder;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -234,11 +235,29 @@ public class FoodList extends AppCompatActivity {
                 .build();
         searchAdapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(searchOptions) {
             @Override
-            protected void onBindViewHolder(@NonNull FoodViewHolder holder, int position, @NonNull Food model) {
+            protected void onBindViewHolder(@NonNull FoodViewHolder holder, final int position, @NonNull final Food model) {
 
                 holder.foodName.setText(model.getName());
                 holder.foodPrice.setText(String.format("$ %s",model.getPrice().toString()));
                 Picasso.with(getApplicationContext()).load(model.getImage()).into(holder.foodImage);
+
+
+                //Quick Cart
+                holder.quick_cart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new Database(getApplicationContext()).addToCart(new Order(
+                                adapter.getRef(position).getKey(),
+                                model.getName(),
+                                "1",
+                                model.getPrice(),
+                                model.getDiscount()
+                        ));
+                        Toast.makeText(FoodList.this,"Added to Cart",Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
 
                 final Food food = model;
                 //System.out.println(food.getName());
