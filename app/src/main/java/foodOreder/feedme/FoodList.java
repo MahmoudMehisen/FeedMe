@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +40,7 @@ import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.Model.Food;
 import foodOreder.feedme.ViewHolder.FoodViewHolder;
 
+
 public class FoodList extends AppCompatActivity {
 
     RecyclerView recyclerView;
@@ -63,6 +65,8 @@ public class FoodList extends AppCompatActivity {
     //Facebook Share
     CallbackManager callbackManager;
     ShareDialog shareDialog;
+
+    SwipeRefreshLayout swipeRefreshLayout;
 
     //Create Target from Picasso
     Target target = new Target() {
@@ -99,7 +103,46 @@ public class FoodList extends AppCompatActivity {
 
         //Init Facebook
         callbackManager = CallbackManager.Factory.create();
-        shareDialog =  new ShareDialog(this);
+        shareDialog = new ShareDialog(this);
+
+
+        // swip
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeLayout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.holo_green_light, R.color.holo_orange_light, R.color.blue_normal);
+
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (getIntent() != null) {
+                    categoryId = getIntent().getStringExtra("CategoryId");
+                }
+                if (!categoryId.isEmpty() && categoryId != null) {
+                    if (Common.isConnectedToInternet(getBaseContext())) {
+                        loadListFood(categoryId);
+                    } else {
+                        Toast.makeText(FoodList.this, "Please Check Your Internet Connection !!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+            }
+        });
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                if (getIntent() != null) {
+                    categoryId = getIntent().getStringExtra("CategoryId");
+                }
+                if (!categoryId.isEmpty() && categoryId != null) {
+                    if (Common.isConnectedToInternet(getBaseContext())) {
+                        loadListFood(categoryId);
+                    } else {
+                        Toast.makeText(FoodList.this, "Please Check Your Internet Connection !!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+            }
+        });
 
         database = FirebaseDatabase.getInstance();
         foodList = database.getReference("Foods");
@@ -115,17 +158,6 @@ public class FoodList extends AppCompatActivity {
 
         recyclerView.setLayoutManager(layoutManager);
 
-        if (getIntent() != null) {
-            categoryId = getIntent().getStringExtra("CategoryId");
-        }
-        if (!categoryId.isEmpty() && categoryId != null) {
-            if (Common.isConnectedToInternet(getBaseContext())) {
-                loadListFood(categoryId);
-            } else {
-                Toast.makeText(FoodList.this, "Please Check Your Internet Connection !!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
 
         materialSearchBar = (MaterialSearchBar) findViewById(R.id.searchBar);
         materialSearchBar.setHint("Enter your food");
@@ -264,7 +296,7 @@ public class FoodList extends AppCompatActivity {
                     public void onClick(View view) {
                         Picasso.with(getApplicationContext())
                                 .load(model.getImage())
-                                .into(target) ;
+                                .into(target);
                     }
                 });
 
@@ -310,6 +342,7 @@ public class FoodList extends AppCompatActivity {
         };
         recyclerView.setAdapter(adapter);
         adapter.startListening();
+        swipeRefreshLayout.setRefreshing(false);
 
     }
 }

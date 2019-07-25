@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +57,8 @@ public class Home extends AppCompatActivity
     FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
     FirebaseRecyclerOptions<Category> options;
 
+    SwipeRefreshLayout swipeRefreshLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,36 @@ public class Home extends AppCompatActivity
         category = database.getReference("Category");
 
         Paper.init(this);
+
+        //view
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeLayout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,R.color.holo_green_light,R.color.holo_orange_light,R.color.blue_normal);
+
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(Common.isConnectedToInternet(getApplicationContext())){
+                    loadMenu();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Please Check Your Internet Connection !!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                if(Common.isConnectedToInternet(getApplicationContext())){
+                    loadMenu();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Please Check Your Internet Connection !!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
 
 
 
@@ -106,13 +139,7 @@ public class Home extends AppCompatActivity
         loadMenu();
 
 
-        if(Common.isConnectedToInternet(this)){
-            loadMenu();
-        }
-        else{
-            Toast.makeText(this, "Please Check Your Internet Connection !!", Toast.LENGTH_SHORT).show();
-            return;
-        }
+
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
 
@@ -158,6 +185,7 @@ public class Home extends AppCompatActivity
         };
         recycler_menu.setAdapter(adapter);
         adapter.startListening();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
