@@ -321,6 +321,22 @@ public class FoodList extends AppCompatActivity {
                 holder.foodPrice.setText(String.format("$ %s",model.getPrice().toString()));
                 Picasso.with(getApplicationContext()).load(model.getImage()).into(holder.foodImage);
 
+                //Quick Cart
+                holder.quick_cart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new Database(getApplicationContext()).addToCart(new Order(
+                                adapter.getRef(position).getKey(),
+                                model.getName(),
+                                "1",
+                                model.getPrice(),
+                                model.getDiscount()
+                        ));
+                        Toast.makeText(FoodList.this,"Added to Cart",Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
 
                 //Add Favorites
                 if (localDB.isFavorites(adapter.getRef(position).getKey())) {
