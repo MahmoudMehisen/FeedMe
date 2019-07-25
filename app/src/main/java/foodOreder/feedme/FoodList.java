@@ -228,6 +228,13 @@ public class FoodList extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
+        searchAdapter.stopListening();
+    }
+
     private void startSearch(CharSequence text) {
         searchOptions = new FirebaseRecyclerOptions.Builder<Food>()
                 .setQuery(foodList.orderByChild("name").equalTo(text.toString()), Food.class)
