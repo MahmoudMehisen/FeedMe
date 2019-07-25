@@ -53,6 +53,8 @@ dependencies {
 
     implementation 'com.facebook.android:facebook-share:[5,6)'
 
+    implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
+
     //loading fab
     implementation 'io.saeid:fab-loading:1.0.0'
     // fbutton
