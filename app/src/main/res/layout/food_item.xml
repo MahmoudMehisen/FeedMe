@@ -32,10 +32,17 @@
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:gravity="bottom|center"
-                android:layout_weight="9"
+                android:layout_weight="8"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 />
+            <ImageView
+                android:id="@+id/btnShare"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_share_black_24dp"
+                android:tint="@android:color/white"/>
 
             <ImageView
                 android:id="@+id/fav"
