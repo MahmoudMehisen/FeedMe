@@ -26,6 +26,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andremion.counterfab.CounterFab;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,6 +43,7 @@ import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
 import foodOreder.feedme.Common.Common;
+import foodOreder.feedme.Database.Database;
 import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.Model.Category;
 import foodOreder.feedme.Model.Token;
@@ -53,7 +55,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
     FirebaseDatabase database;
     DatabaseReference category;
     TextView txtFullName;
@@ -63,6 +64,8 @@ public class Home extends AppCompatActivity
     FirebaseRecyclerOptions<Category> options;
 
     SwipeRefreshLayout swipeRefreshLayout;
+
+    CounterFab fab;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -128,7 +131,7 @@ public class Home extends AppCompatActivity
 
 
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = (CounterFab ) findViewById(R.id.fab);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -157,6 +160,7 @@ public class Home extends AppCompatActivity
                 startActivity(carIntent);
             }
         });
+        fab.setCount(new Database(this).getCountCart());
 
         loadMenu();
 
@@ -164,6 +168,17 @@ public class Home extends AppCompatActivity
 
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
+
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        fab.setCount(new Database(this).getCountCart());
+
+        if(adapter != null){
+            adapter.startListening();
+        }
 
     }
 
