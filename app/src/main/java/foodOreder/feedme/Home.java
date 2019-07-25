@@ -72,7 +72,7 @@ public class Home extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/main.otf")
+                .setDefaultFontPath("fonts/main.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );

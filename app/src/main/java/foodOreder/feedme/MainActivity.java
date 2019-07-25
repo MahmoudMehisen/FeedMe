@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/main.otf")
+                .setDefaultFontPath("fonts/main.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );

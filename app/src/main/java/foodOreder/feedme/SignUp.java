@@ -45,7 +45,7 @@ public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCom
         super.onCreate(savedInstanceState);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/main.otf")
+                .setDefaultFontPath("fonts/main.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
