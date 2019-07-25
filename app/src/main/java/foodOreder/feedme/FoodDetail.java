@@ -1,5 +1,6 @@
 package foodOreder.feedme;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -30,6 +31,8 @@ import foodOreder.feedme.Database.Database;
 import foodOreder.feedme.Model.Food;
 import foodOreder.feedme.Model.Order;
 import foodOreder.feedme.Model.Rating;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class FoodDetail extends AppCompatActivity implements RatingDialogListener {
 
@@ -47,6 +50,10 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
     Food currentFood;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 
 
@@ -54,6 +61,13 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/main.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
+
+
         setContentView(R.layout.activity_food_detail);
 
         //Firebase

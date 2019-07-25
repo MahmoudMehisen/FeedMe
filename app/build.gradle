@@ -63,5 +63,7 @@ dependencies {
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
     // button loading
     implementation 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
+    //font
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
 
 }

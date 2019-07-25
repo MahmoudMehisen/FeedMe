@@ -1,6 +1,7 @@
 package foodOreder.feedme;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,11 +41,13 @@ import foodOreder.feedme.Database.Database;
 import foodOreder.feedme.Model.Order;
 import foodOreder.feedme.Model.Request;
 import foodOreder.feedme.ViewHolder.CartAdapter;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Cart extends AppCompatActivity {
 
 
-    public static final int PAYPAL_REQUEST_CODE=9999;
+    public static final int PAYPAL_REQUEST_CODE = 9999;
 
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
@@ -64,11 +67,24 @@ public class Cart extends AppCompatActivity {
             .clientId(Config.PAYPAL_CLIENT_ID);
     String address, comment;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/main.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
+
+
         setContentView(R.layout.activity_cart);
+
 
         //Init paypal
         Intent intent = new Intent(this, PayPalService.class);
@@ -112,9 +128,6 @@ public class Cart extends AppCompatActivity {
         View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
 
 
-
-
-
         final MaterialEditText edtAddress = (MaterialEditText) order_address_comment.findViewById(R.id.edtAddress);
         final MaterialEditText edtComment = (MaterialEditText) order_address_comment.findViewById(R.id.edtComment);
 
@@ -133,10 +146,9 @@ public class Cart extends AppCompatActivity {
                 PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(formatAmount), "USD", "Feed Me App Order", PayPalPayment.PAYMENT_INTENT_SALE);
 
                 Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
-                intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,config);
-                intent.putExtra(PaymentActivity.EXTRA_PAYMENT,payPalPayment);
-                startActivityForResult(intent,PAYPAL_REQUEST_CODE);
-
+                intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+                intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
+                startActivityForResult(intent, PAYPAL_REQUEST_CODE);
 
 
             }
@@ -153,50 +165,40 @@ public class Cart extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode==PAYPAL_REQUEST_CODE)
-        {
-            if(resultCode == RESULT_OK)
-            {
+        if (requestCode == PAYPAL_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
                 PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-                if(confirmation!=null)
-                {
-                    try{
+                if (confirmation != null) {
+                    try {
                         String paymentDetail = confirmation.toJSONObject().toString(4);
                         JSONObject jsonObject = new JSONObject(paymentDetail);
 
 
-                Request request = new Request(
-                        Common.currentUser.getPhone(),
-                        Common.currentUser.getName(),
-                        address,
-                        totalPrice.getText().toString(),
-                        "0",
-                        comment,
-                        jsonObject.getJSONObject("response").getString("state"),
-                        cart
-                );
-                requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
+                        Request request = new Request(
+                                Common.currentUser.getPhone(),
+                                Common.currentUser.getName(),
+                                address,
+                                totalPrice.getText().toString(),
+                                "0",
+                                comment,
+                                jsonObject.getJSONObject("response").getString("state"),
+                                cart
+                        );
+                        requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
 
-                new Database(getApplicationContext()).cleanCart();
-                Toast.makeText(Cart.this,"Thank you , Order Place",Toast.LENGTH_SHORT).show();
-                finish();
-
-
+                        new Database(getApplicationContext()).cleanCart();
+                        Toast.makeText(Cart.this, "Thank you , Order Place", Toast.LENGTH_SHORT).show();
+                        finish();
 
 
-                    }catch (JSONException e)
-                    {
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-            }
-            else if(requestCode == Activity.RESULT_CANCELED)
-            {
-                Toast.makeText(this,"Payment cancel",Toast.LENGTH_SHORT).show();
-            }
-            else if(resultCode == PaymentActivity.RESULT_EXTRAS_INVALID)
-            {
-                Toast.makeText(this,"invalid payment",Toast.LENGTH_SHORT).show();
+            } else if (requestCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(this, "Payment cancel", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
+                Toast.makeText(this, "invalid payment", Toast.LENGTH_SHORT).show();
             }
         }
     }

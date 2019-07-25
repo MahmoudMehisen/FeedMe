@@ -1,6 +1,7 @@
 package foodOreder.feedme;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -25,6 +26,8 @@ import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Model.User;
 import foodOreder.feedme.Util.ProgressGenerator;
 import io.paperdb.Paper;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCompleteListener {
@@ -37,11 +40,23 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
     Intent HomeIntent;
     TextView slogan, txtForgotPwd;
     com.rey.material.widget.CheckBox ckbRemember;
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/main.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
+
+
         setContentView(R.layout.activity_signin);
 
 

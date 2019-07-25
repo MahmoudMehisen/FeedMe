@@ -1,5 +1,6 @@
 package foodOreder.feedme;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Model.Request;
 import foodOreder.feedme.ViewHolder.OrderViewHolder;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class OrderStatus extends AppCompatActivity {
 
@@ -30,8 +33,20 @@ public class OrderStatus extends AppCompatActivity {
     FirebaseRecyclerAdapter<Request, OrderViewHolder> adapter;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/main.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
+
+
         setContentView(R.layout.activity_order_status);
 
         database = FirebaseDatabase.getInstance();

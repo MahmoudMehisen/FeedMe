@@ -1,5 +1,6 @@
 package foodOreder.feedme;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -39,6 +40,8 @@ import foodOreder.feedme.Database.Database;
 import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.Model.Food;
 import foodOreder.feedme.ViewHolder.FoodViewHolder;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class FoodList extends AppCompatActivity {
@@ -95,10 +98,22 @@ public class FoodList extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/main.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
+
+
         setContentView(R.layout.activity_food_list);
 
         //Init Facebook
@@ -222,6 +237,7 @@ public class FoodList extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull FoodViewHolder holder, int position, @NonNull Food model) {
 
                 holder.foodName.setText(model.getName());
+                holder.foodPrice.setText(String.format("$ %s",model.getPrice().toString()));
                 Picasso.with(getApplicationContext()).load(model.getImage()).into(holder.foodImage);
 
                 final Food food = model;
@@ -248,6 +264,7 @@ public class FoodList extends AppCompatActivity {
         };
         recyclerView.setAdapter(searchAdapter);
         searchAdapter.startListening();
+        swipeRefreshLayout.setRefreshing(false);
 
     }
 
@@ -282,6 +299,7 @@ public class FoodList extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull final FoodViewHolder holder, final int position, @NonNull final Food model) {
 
                 holder.foodName.setText(model.getName());
+                holder.foodPrice.setText(String.format("$ %s",model.getPrice().toString()));
                 Picasso.with(getApplicationContext()).load(model.getImage()).into(holder.foodImage);
 
 

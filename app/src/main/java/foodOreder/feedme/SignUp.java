@@ -1,5 +1,6 @@
 package foodOreder.feedme;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Model.User;
 import foodOreder.feedme.Util.ProgressGenerator;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCompleteListener {
 
@@ -32,10 +35,22 @@ public class SignUp extends AppCompatActivity implements ProgressGenerator.OnCom
     Intent HomeIntent;
     TextView slogan;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/main.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
+
+
         setContentView(R.layout.activity_sign_up);
 
 
