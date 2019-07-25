@@ -2,7 +2,9 @@ package foodOreder.feedme.ViewHolder;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -12,13 +14,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import foodOreder.feedme.Cart;
 import foodOreder.feedme.Common.Common;
+import foodOreder.feedme.Database.Database;
 import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.Model.Order;
 import foodOreder.feedme.R;
@@ -28,7 +33,7 @@ class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
 
     public TextView cartName,cartPrice;
 
-    public ImageView cartCount;
+    public ElegantNumberButton btn_quantity;
 
     private ItemClickListener itemClickListener;
 
@@ -39,7 +44,7 @@ class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
     public CartViewHolder(@NonNull View itemView) {
         super(itemView);
 
-        cartCount = (ImageView)itemView.findViewById(R.id.cartItemCount);
+        btn_quantity = (ElegantNumberButton)itemView.findViewById(R.id.btn_quantity);
         cartName = (TextView)itemView.findViewById(R.id.cartItemName);
         cartPrice = (TextView)itemView.findViewById(R.id.cartItemPrice);
 
@@ -62,29 +67,52 @@ class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
 public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
 
     private List<Order> listData = new ArrayList<>();
-    private Context context;
+    private Cart cart;
 
-    public CartAdapter(List<Order> listData, Context context) {
+    public CartAdapter(List<Order> listData, Cart cart) {
         this.listData = listData;
-        this.context = context;
+        this.cart = cart;
     }
 
     @NonNull
     @Override
     public CartViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(cart);
         View itemView =  inflater.inflate(R.layout.cart_item,viewGroup,false);
         return new CartViewHolder(itemView);
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CartViewHolder cartViewHolder, int i) {
+    public void onBindViewHolder(@NonNull CartViewHolder cartViewHolder, final int i) {
 
-        TextDrawable drawable = TextDrawable.builder().buildRound(""+listData.get(i).getQuantity(), Color.RED);
+//        TextDrawable drawable = TextDrawable.builder().buildRound(""+listData.get(i).getQuantity(), Color.RED);
+//        cartViewHolder.cartCount.setImageDrawable(drawable);
 
-        cartViewHolder.cartCount.setImageDrawable(drawable);
+        cartViewHolder.btn_quantity.setNumber(listData.get(i).getQuantity());
+        cartViewHolder.btn_quantity.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
+            @Override
+            public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
+                Order order =  listData.get(i);
+                order.setQuantity(String.valueOf(newValue));
+                new Database(cart).updateCart(order);
+
+                //update txttotal
+                //Calculate Total Price
+                int total = 0;
+                List<Order> orders = new Database(cart).getCart();
+                for (Order item : orders) {
+                    total += (Integer.parseInt(order.getPrice())) * (Integer.parseInt(item.getQuantity()));
+                    Locale locale = new Locale("en", "US");
+                    NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
+                    cart.totalPrice.setText(fmt.format(total));
+                }
+
+            }
+        });
+
+
         Locale locale = new Locale("en","US");
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
         int price = (Integer.parseInt(listData.get(i).getPrice()))*(Integer.parseInt(listData.get(i).getQuantity()));
