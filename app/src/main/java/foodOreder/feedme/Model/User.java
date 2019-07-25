@@ -1,7 +1,7 @@
 package foodOreder.feedme.Model;
 
 public class User {
-    private String name,password,phone,isStaff, SecureCode;
+    private String name,password,phone,isStaff, SecureCode,homeLat,homeLng;
 
     public String getSecureCode() {
         return SecureCode;
@@ -16,6 +16,24 @@ public class User {
         this.password = password;
         this.isStaff= "false";
         this.SecureCode = SecureCode;
+        this.homeLat = "0";
+        this.homeLng = "0";
+    }
+
+    public String getHomeLat() {
+        return homeLat;
+    }
+
+    public void setHomeLat(String homeLat) {
+        this.homeLat = homeLat;
+    }
+
+    public String getHomeLng() {
+        return homeLng;
+    }
+
+    public void setHomeLng(String homeLng) {
+        this.homeLng = homeLng;
     }
 
     public User() {

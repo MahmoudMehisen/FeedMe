@@ -13,22 +13,6 @@
             android:padding="16dp">
 
             <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/edtAddress"
-                android:hint="Address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColorHint="@color/colorPrimary"
-                android:text=""
-                android:textColor="@color/colorPrimary"
-                android:textSize="34sp"
-                android:inputType="text"
-                app:met_baseColor="@color/colorPrimary"
-                app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/colorPrimary"
-                app:met_singleLineEllipsis="true"
-                />
-
-            <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/edtComment"
                 android:hint="Comment"
                 android:layout_width="match_parent"
@@ -43,6 +27,22 @@
                 app:met_primaryColor="@color/colorPrimary"
                 app:met_singleLineEllipsis="true"
                 />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RadioButton
+                    android:id="@+id/rdiShipToAddress"
+                    android:text="Ship To This Address"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <RadioButton
+                    android:id="@+id/rdiHomeAddress"
+                    android:text="Home Address"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+            </RadioGroup>
 
 
         </LinearLayout>

@@ -6,28 +6,29 @@ public class Request {
 
     private String phone;
     private String name;
-    private String address;
+    private String lat;
+    private String lng;
     private String total;
     private String status;
     private String comment;
     private String paymentState;
     private List<Order> foods;
 
-    public Request(){}
+    public Request() {
+    }
 
-
-
-
-    public Request(String phone, String name, String address, String total, String status, String comment, String paymentState, List<Order> foods) {
+    public Request(String phone, String name, String lat, String lng, String total, String status, String comment, String paymentState, List<Order> foods) {
         this.phone = phone;
         this.name = name;
-        this.address = address;
+        this.lat = lat;
+        this.lng = lng;
         this.total = total;
         this.status = status;
         this.comment = comment;
         this.paymentState = paymentState;
         this.foods = foods;
     }
+
     public String getPhone() {
         return phone;
     }
@@ -44,12 +45,20 @@ public class Request {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public String getLat() {
+        return lat;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
     }
 
     public String getTotal() {
