@@ -21,6 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,6 +89,11 @@ public class Home extends AppCompatActivity
         database = FirebaseDatabase.getInstance();
         category = database.getReference("Category");
 
+        options = new FirebaseRecyclerOptions.Builder<Category>()
+                .setQuery(category, Category.class)
+                .build();
+
+
         Paper.init(this);
 
         //view
@@ -139,11 +146,9 @@ public class Home extends AppCompatActivity
 
         //Load Menu
         recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
-        recycler_menu.setHasFixedSize(true);
-        //layoutManager = new LinearLayoutManager(this);
-        //recycler_menu.setLayoutManager(layoutManager);
-
         recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
+        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recycler_menu.getContext(), R.anim.layout_fall_down);
+        recycler_menu.setLayoutAnimation(controller);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,9 +182,7 @@ public class Home extends AppCompatActivity
 
     private void loadMenu() {
 
-         options = new FirebaseRecyclerOptions.Builder<Category>()
-                .setQuery(category, Category.class)
-                .build();
+
 
          adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
             @NonNull
@@ -208,6 +211,14 @@ public class Home extends AppCompatActivity
         recycler_menu.setAdapter(adapter);
         adapter.startListening();
         swipeRefreshLayout.setRefreshing(false);
+
+
+
+        //Animation
+        recycler_menu.getAdapter().notifyDataSetChanged();
+        recycler_menu.scheduleLayoutAnimation();
+
+
     }
 
     @Override
