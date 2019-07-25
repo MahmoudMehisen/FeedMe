@@ -169,6 +169,11 @@ public class Home extends AppCompatActivity
         tokens.child(Common.currentUser.getPhone()).setValue(data);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
 
     private void loadMenu() {
 

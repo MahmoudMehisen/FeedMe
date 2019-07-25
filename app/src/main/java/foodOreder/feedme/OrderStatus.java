@@ -67,6 +67,12 @@ public class OrderStatus extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
+
     private void loadOrders(String phone) {
 
         options = new FirebaseRecyclerOptions.Builder<Request>()
