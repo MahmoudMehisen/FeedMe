@@ -10,7 +10,7 @@ import foodOreder.feedme.R;
 
 public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView orderId,orderStatus,orderPhone,orderAdress;
+    public TextView orderId,orderStatus,orderPhone;
     private ItemClickListener itemClickListener;
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
@@ -20,7 +20,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         super(itemView);
 
         orderId = (TextView) itemView.findViewById(R.id.orderId);
-        orderAdress = (TextView) itemView.findViewById(R.id.orderAdress);
+
         orderPhone = (TextView) itemView.findViewById(R.id.orderPhone);
         orderStatus = (TextView) itemView.findViewById(R.id.orderStatus);
 
