@@ -59,6 +59,8 @@ dependencies {
     implementation 'com.facebook.android:facebook-share:[5,6)'
     implementation 'com.facebook.android:account-kit-sdk:5.+'
     //paypal
+
+
     implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
     //CounterFAB
     implementation 'com.github.andremion:counterfab:1.0.1'

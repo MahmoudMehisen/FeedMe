@@ -368,7 +368,7 @@ public class Home extends AppCompatActivity
 
         LayoutInflater inflater = LayoutInflater.from(this);
         View layout_name = inflater.inflate(R.layout.update_name_layout, null);
-        final MaterialEditText edtName = (MaterialEditText) findViewById(R.id.editName);
+        final MaterialEditText edtName = (MaterialEditText)layout_name.findViewById(R.id.edtName);
 
         alertDialog.setView(layout_name);
 

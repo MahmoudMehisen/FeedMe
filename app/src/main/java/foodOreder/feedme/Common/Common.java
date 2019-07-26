@@ -12,6 +12,7 @@ import foodOreder.feedme.Remote.RetrofitClient;
 public class Common {
     public static User currentUser;
 
+public static final String INTENT_FOOD_ID = "FoodId";
 
     private static final String BASE_URL = "https://fcm.googleapis.com/";
 
