@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -32,8 +33,8 @@ class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
 
 
     public TextView cartName,cartPrice;
-
     public ElegantNumberButton btn_quantity;
+    public ImageView cart_image;
 
     private ItemClickListener itemClickListener;
 
@@ -47,6 +48,7 @@ class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
         btn_quantity = (ElegantNumberButton)itemView.findViewById(R.id.btn_quantity);
         cartName = (TextView)itemView.findViewById(R.id.cartItemName);
         cartPrice = (TextView)itemView.findViewById(R.id.cartItemPrice);
+        cart_image = (ImageView)itemView.findViewById(R.id.cart_image);
 
         itemView.setOnCreateContextMenuListener(this);
 
@@ -87,8 +89,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder cartViewHolder, final int i) {
 
-//        TextDrawable drawable = TextDrawable.builder().buildRound(""+listData.get(i).getQuantity(), Color.RED);
-//        cartViewHolder.cartCount.setImageDrawable(drawable);
+        Picasso.with(cart.getBaseContext())
+                .load(listData.get(i).getImage())
+                .resize(70, 70)
+                .centerCrop()
+                .into(cartViewHolder.cart_image);
 
         cartViewHolder.btn_quantity.setNumber(listData.get(i).getQuantity());
         cartViewHolder.btn_quantity.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
@@ -108,7 +113,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
                     NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
                     cart.totalPrice.setText(fmt.format(total));
                 }
-
             }
         });
 
