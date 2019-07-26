@@ -34,7 +34,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
@@ -43,7 +42,6 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,7 +126,7 @@ public class Cart extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/main.ttf")
+                .setDefaultFontPath("fonts/main.otf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
@@ -242,36 +240,6 @@ public class Cart extends AppCompatActivity
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    if (Common.currentUser.getHomeLat().equals("0")) {
-                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
-                        alertDialog.setTitle("Home Location");
-                        alertDialog.setMessage("Is this location your home location?");
-                        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Common.currentUser.setHomeLat(String.valueOf(mLastLocation.getLatitude()));
-                                Common.currentUser.setHomeLng(String.valueOf(mLastLocation.getLongitude()));
-                                Map<String, Object> HomeLocation = new HashMap<>();
-                                HomeLocation.put("homeLat", Common.currentUser.getHomeLat());
-                                HomeLocation.put("homeLng", Common.currentUser.getHomeLng());
-
-
-                                //make update
-                                DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users");
-                                user.child(Common.currentUser.getPhone())
-                                        .updateChildren(HomeLocation);
-
-
-                            }
-                        });
-                        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                            }
-                        });
-                        alertDialog.show();
-                    }
-
 
                     latLocation = String.valueOf(mLastLocation.getLatitude());
                     lngLocation = String.valueOf(mLastLocation.getLongitude());
@@ -313,6 +281,36 @@ public class Cart extends AppCompatActivity
                         cart
                 );
                 requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
+
+                if (Common.currentUser.getHomeLat().equals("0")) {
+                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
+                    alertDialog.setTitle("Home Location");
+                    alertDialog.setMessage("Is this location your home location?");
+                    alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Common.currentUser.setHomeLat(String.valueOf(mLastLocation.getLatitude()));
+                            Common.currentUser.setHomeLng(String.valueOf(mLastLocation.getLongitude()));
+                            Map<String, Object> HomeLocation = new HashMap<>();
+                            HomeLocation.put("homeLat", Common.currentUser.getHomeLat());
+                            HomeLocation.put("homeLng", Common.currentUser.getHomeLng());
+
+
+                            //make update
+                            DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users");
+                            user.child(Common.currentUser.getPhone())
+                                    .updateChildren(HomeLocation);
+
+
+                        }
+                    });
+                    alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+                    alertDialog.show();
+                }
 
                 new Database(getApplicationContext()).cleanCart();
                 Toast.makeText(Cart.this, "Thank you , Order Place", Toast.LENGTH_SHORT).show();

@@ -41,7 +41,7 @@ public class OrderStatus extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/main.ttf")
+                .setDefaultFontPath("fonts/main.otf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
