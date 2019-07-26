@@ -10,21 +10,27 @@
     >
 
     <LinearLayout
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_margin="8dp"
         android:layout_gravity="center_vertical"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
+
+        <ImageView
+            android:id="@+id/cart_image"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="9"
-
-
+            android:layout_margin="8dp"
             >
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
