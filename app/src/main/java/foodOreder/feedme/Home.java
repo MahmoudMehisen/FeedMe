@@ -33,7 +33,6 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -352,7 +351,7 @@ public class Home extends AppCompatActivity
             signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(signIn);
             finish();
-        } else if (id == R.id.nav_change_pwd) {
+        } else if (id == R.id.nav_update_name) {
             showChangePasswordDialog();
         }
 
@@ -363,22 +362,19 @@ public class Home extends AppCompatActivity
 
     private void showChangePasswordDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
-        alertDialog.setTitle("CHANGE PASSWORD");
-        ;
+        alertDialog.setTitle("UPDATE NAME");
+
         alertDialog.setMessage("Please fill all information");
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        View layout_pwd = inflater.inflate(R.layout.change_password_layout, null);
+        View layout_name = inflater.inflate(R.layout.update_name_layout, null);
+        final MaterialEditText edtName = (MaterialEditText) findViewById(R.id.editName);
 
-        final MaterialEditText edtPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtPassword);
-        final MaterialEditText edtNewPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtNewPassword);
-        final MaterialEditText edtRepeatPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtRepeatPassword);
-
-        alertDialog.setView(layout_pwd);
+        alertDialog.setView(layout_name);
 
 
         //Button
-        alertDialog.setPositiveButton("CHANGE", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //changer password here
@@ -386,39 +382,25 @@ public class Home extends AppCompatActivity
                 final android.app.AlertDialog waitingDialog = new SpotsDialog(Home.this);
                 waitingDialog.show();
 
-                //check old password
-                if (edtPassword.getText().toString().equals(Common.currentUser.getPassword())) {
+                Map<String,Object> update_name= new HashMap<>();
+                update_name.put("name",edtName.getText().toString());
 
-                    //check new password and repeated password
-                    if (edtNewPassword.getText().toString().equals(edtRepeatPassword.getText().toString())) {
-                        Map<String, Object> PasswordUpdate = new HashMap<>();
-                        PasswordUpdate.put("password", edtNewPassword.getText().toString());
+                 FirebaseDatabase.getInstance()
+                        .getReference("Users")
+                        .child(Common.currentUser.getPhone())
+                        .updateChildren(update_name)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                waitingDialog.dismiss();
+                                if (task.isSuccessful())
+                                    Toast.makeText(Home.this, "Name was updated", Toast.LENGTH_SHORT).show();
 
-                        //make update
-                        DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users");
-                        user.child(Common.currentUser.getPhone())
-                                .updateChildren(PasswordUpdate)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        waitingDialog.dismiss();
-                                        Toast.makeText(Home.this, "Your password has been updated successfully !!", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(Home.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    } else {
-                        waitingDialog.dismiss();
-                        Toast.makeText(Home.this, "Passwords don't match !!!", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    waitingDialog.dismiss();
-                    Toast.makeText(Home.this, "Invalid password !!, please check your password and try again", Toast.LENGTH_SHORT).show();
-                }
+                            }
+                        });
+
+
+
 
             }
         });
