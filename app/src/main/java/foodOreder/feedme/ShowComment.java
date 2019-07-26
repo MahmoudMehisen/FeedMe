@@ -93,7 +93,7 @@ public class ShowComment extends AppCompatActivity {
 
                             holder.ratingBar.setRating(Float.parseFloat(model.getRateValue()));
                             holder.txtComment.setText(model.getComment());
-                            holder.txtUserPhone.setText(model.getUserPhone());
+                            holder.txtUserName.setText(model.getUserPhone());
 
                         }
 
@@ -136,7 +136,7 @@ public class ShowComment extends AppCompatActivity {
 
                             holder.ratingBar.setRating(Float.parseFloat(model.getRateValue()));
                             holder.txtComment.setText(model.getComment());
-                            holder.txtUserPhone.setText(model.getUserPhone());
+                            holder.txtUserName.setText(model.getUserPhone());
 
                         }
 
