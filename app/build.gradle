@@ -50,19 +50,16 @@ dependencies {
 
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     implementation 'com.github.mancj:MaterialSearchBar:0.8.2'
+    //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
-
+    //facebook share
     implementation 'com.facebook.android:facebook-share:[5,6)'
-
-
-
+    //paypal
     implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
-
     //CounterFAB
     implementation 'com.github.andremion:counterfab:1.0.1'
-
     //loading fab
     implementation 'io.saeid:fab-loading:1.0.0'
     // fbutton
@@ -73,5 +70,8 @@ dependencies {
     implementation 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
     //font
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+    //slider
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.daimajia.slider:library:1.1.5@aar'
 
 }

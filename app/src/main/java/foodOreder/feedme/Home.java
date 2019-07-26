@@ -26,13 +26,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andremion.counterfab.CounterFab;
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
@@ -44,6 +51,7 @@ import dmax.dialog.SpotsDialog;
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Database.Database;
 import foodOreder.feedme.Interface.ItemClickListener;
+import foodOreder.feedme.Model.Banner;
 import foodOreder.feedme.Model.Category;
 import foodOreder.feedme.Model.Token;
 import foodOreder.feedme.ViewHolder.MenuViewHolder;
@@ -65,6 +73,11 @@ public class Home extends AppCompatActivity
     SwipeRefreshLayout swipeRefreshLayout;
 
     CounterFab fab;
+
+    HashMap<String, String>imageList;
+    SliderLayout mSlider;
+
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -168,6 +181,75 @@ public class Home extends AppCompatActivity
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
 
+        //Setup Slider
+        setupSlider();
+
+    }
+
+    private void setupSlider() {
+        mSlider = (SliderLayout) findViewById(R.id.slider);
+        imageList = new HashMap<>();
+
+        final DatabaseReference banner = database.getReference("Banner");
+
+        banner.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot postSnapShot:dataSnapshot.getChildren())
+                {
+                    Banner banner = postSnapShot.getValue(Banner.class);
+                    System.out.println(banner.getName());
+                    imageList.put(banner.getName()+"@@@"+banner.getId(),banner.getImage());
+                }
+
+                for(String key:imageList.keySet())
+                {
+                    String[] keySplit = key.split("@@@");
+                    String nameOfFood = keySplit[0];
+                    String idOfFood = keySplit[1];
+
+                    // Create Slider
+                    final TextSliderView textSliderView = new TextSliderView(getApplicationContext());
+                    textSliderView
+                            .description(nameOfFood)
+                            .image(imageList.get(key))
+                            .setScaleType(BaseSliderView.ScaleType.Fit)
+                            .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
+                                @Override
+                                public void onSliderClick(BaseSliderView slider) {
+                                    Intent intent = new Intent(Home.this,FoodDetail.class);
+                                    // we will send food id to FoodDetail
+                                    intent.putExtras(textSliderView.getBundle());
+                                    startActivity(intent);
+
+                                }
+                            });
+                    textSliderView.bundle(new Bundle());
+                    textSliderView.getBundle().putString("FoodId",idOfFood);
+                    mSlider.addSlider(textSliderView);
+
+                    //remove event after finish
+                    banner.removeEventListener(this);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mSlider.setPresetTransformer(SliderLayout.Transformer.Background2Foreground);
+        mSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        mSlider.setCustomAnimation(new DescriptionAnimation());
+        mSlider.setDuration(4000);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //mSlider.stopAutoCycle();
     }
 
     @Override
