@@ -9,6 +9,7 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import foodOreder.feedme.Model.Order;
 
@@ -75,21 +76,21 @@ public class Database extends SQLiteAssetHelper {
     }
 
     //Favorites
-    public void AddToFavorites(String foodId){
+    public void AddToFavorites(String foodId, String userPhone){
         SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("INSERT INTO Favorites(FoodId) VALUES ('%s');", foodId);
+        String query = String.format("INSERT INTO Favorites(FoodId, UserPhone) VALUES ('%s', '%s');", foodId, userPhone);
         db.execSQL(query);
     }
 
-    public void RemoveFromFavorites(String foodId){
+    public void RemoveFromFavorites(String foodId, String userPhone){
         SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("DELETE FROM Favorites WHERE FoodId ='%s';", foodId);
+        String query = String.format("DELETE FROM Favorites WHERE FoodId ='%s' and UserPhone = '%s';", foodId, userPhone);
         db.execSQL(query);
     }
 
-    public boolean isFavorites(String foodId){
+    public boolean isFavorites(String foodId, String userPhone){
         SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("SELECT * FROM Favorites WHERE FoodId ='%s';", foodId);
+        String query = String.format("SELECT * FROM Favorites WHERE FoodId ='%s' and UserPhone = '%s';", foodId, userPhone);
 
         Cursor cursor =db.rawQuery(query, null);
         if(cursor.getCount()<=0){
