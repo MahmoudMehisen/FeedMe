@@ -72,7 +72,7 @@ public class Cart extends AppCompatActivity
     DatabaseReference requests;
 
 
-   public TextView totalPrice;
+    public TextView totalPrice;
     Button btnPlace;
 
     IGoogleService mGoogleMapService;
@@ -251,8 +251,7 @@ public class Cart extends AppCompatActivity
         rdiHomeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b)
-                {
+                if (b) {
                     latLocation = Common.currentUser.getHomeLat();
                     lngLocation = Common.currentUser.getHomeLng();
                 }
@@ -391,10 +390,11 @@ public class Cart extends AppCompatActivity
         int total = 0;
         for (Order order : cart) {
             total += (Integer.parseInt(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
-            Locale locale = new Locale("en", "US");
-            NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-            totalPrice.setText(fmt.format(total));
+
         }
+        Locale locale = new Locale("en", "US");
+        NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
+        totalPrice.setText(fmt.format(total));
     }
 
 
