@@ -30,6 +30,7 @@ import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.facebook.accountkit.AccountKit;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -75,6 +76,8 @@ public class Home extends AppCompatActivity
 
     HashMap<String, String> imageList;
     SliderLayout mSlider;
+
+
 
 
     @Override
@@ -318,6 +321,8 @@ public class Home extends AppCompatActivity
         return true;
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.refreshBtn) {
@@ -347,8 +352,9 @@ public class Home extends AppCompatActivity
             //Delete remember user and password
             Paper.book().destroy();
 
-            Intent signIn = new Intent(Home.this, SignIn.class);
+            Intent signIn = new Intent(Home.this, MainActivity.class);
             signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            AccountKit.logOut();
             startActivity(signIn);
             finish();
         } else if (id == R.id.nav_update_name) {
@@ -415,4 +421,6 @@ public class Home extends AppCompatActivity
         alertDialog.show();
 
     }
+
+
 }
