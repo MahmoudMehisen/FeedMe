@@ -44,7 +44,7 @@
             android:layout_height="60dp"
             android:layout_margin="8dp"
             android:layout_weight="2"
-            android:text="Sing Up"
+            android:text="Sign Up"
             android:textColor="@color/colorIcon"
             fbutton:buttonColor="@color/btnSignUp"
             />
@@ -61,7 +61,7 @@
             android:layout_height="60dp"
             android:layout_margin="8dp"
             android:layout_weight="2"
-            android:text="Sing In"
+            android:text="Sign In"
             android:textColor="@color/colorIcon"
             fbutton:buttonColor="@color/btnSignIn"
             />

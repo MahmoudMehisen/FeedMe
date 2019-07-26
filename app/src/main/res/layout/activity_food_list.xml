@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
         <com.mancj.materialsearchbar.MaterialSearchBar
             style="@style/MaterialSearchBarLight"
-            app:mt_hint="Enter your food"
+            app:mt_hint="Search for food"
             android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
