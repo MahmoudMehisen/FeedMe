@@ -176,7 +176,7 @@ public class FoodList extends AppCompatActivity {
 
 
         materialSearchBar = (MaterialSearchBar) findViewById(R.id.searchBar);
-        materialSearchBar.setHint("Enter your food");
+        materialSearchBar.setHint("Search for food");
 
         loadSuggest();
         materialSearchBar.setLastSuggestions(suggestList);

@@ -313,7 +313,7 @@ public class Cart extends AppCompatActivity
                 }
 
                 new Database(getApplicationContext()).cleanCart();
-                Toast.makeText(Cart.this, "Thank you , Order Place", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Cart.this, "Thank you , Order Placed", Toast.LENGTH_SHORT).show();
                 finish();
 
 
