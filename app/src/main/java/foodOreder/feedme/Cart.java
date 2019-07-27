@@ -6,9 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -44,6 +44,7 @@ import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.rey.material.widget.SnackBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -153,7 +154,6 @@ public class Cart extends AppCompatActivity
         rootLayout = (RelativeLayout)findViewById(R.id.rootLayout);
 
 
-
         //Runtime permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -176,7 +176,6 @@ public class Cart extends AppCompatActivity
 
 
 
-
         database = FirebaseDatabase.getInstance();
         requests = database.getReference("Requests");
 
@@ -188,9 +187,11 @@ public class Cart extends AppCompatActivity
         totalPrice = (TextView) findViewById(R.id.total);
         btnPlace = (Button) findViewById(R.id.btnPlaceOrder);
 
+
         //swipe to delete
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
 
         loadListFood();
 
@@ -537,12 +538,11 @@ public class Cart extends AppCompatActivity
         {
             String name = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition()).getProductName();
 
-            final Order deleteItem = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition());
-            final int deleteIndex = viewHolder.getAdapterPosition();
+            Order deleteItem = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition());
+            int deleteIndex = viewHolder.getAdapterPosition();
 
             adapter.removeItem(deleteIndex);
-            System.out.println(deleteItem.getProductId()+" --  "+deleteItem.getProductName());
-            new Database(getBaseContext()).removeFromCart(deleteItem.getProductId(), Common.currentUser.getPhone());
+            new Database(getBaseContext()).RemoveFromFavorites(deleteItem.getProductId(), Common.currentUser.getPhone());
 
 
             //update txttotal
@@ -557,27 +557,7 @@ public class Cart extends AppCompatActivity
 
 
             // Make Snackbar
-            Snackbar snackbar = Snackbar.make(rootLayout,name +" removed from cart!",Snackbar.LENGTH_LONG);
-            snackbar.setAction("UNDO", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    adapter.restoreItem(deleteItem,deleteIndex);
-                    new Database(getApplicationContext()).addToCart(deleteItem);
-
-                    //update txttotal
-                    //Calculate Total Price
-                    int total = 0;
-                    List<Order> orders = new Database(getBaseContext()).getCart(Common.currentUser.getPhone()); /// update salem
-                    for (Order item : orders)
-                        total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
-                    Locale locale = new Locale("en", "US");
-                    NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-                    totalPrice.setText(fmt.format(total));
-
-                }
-            });
-            snackbar.setActionTextColor(Color.YELLOW);
-            snackbar.show();
+            Toast.makeText(getApplicationContext(),name + "removed from cart!", Toast.LENGTH_LONG).show();
 
 
 
