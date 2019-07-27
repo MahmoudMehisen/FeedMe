@@ -15,6 +15,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -38,6 +40,7 @@ import java.util.List;
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Database.Database;
 import foodOreder.feedme.Interface.ItemClickListener;
+import foodOreder.feedme.Model.Favorites;
 import foodOreder.feedme.Model.Food;
 import foodOreder.feedme.Model.Order;
 import foodOreder.feedme.ViewHolder.FoodViewHolder;
@@ -173,6 +176,8 @@ public class FoodList extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
 
         recyclerView.setLayoutManager(layoutManager);
+        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recyclerView.getContext(),R.anim.layout_fall_down);
+        recyclerView.setLayoutAnimation(controller);
 
 
         materialSearchBar = (MaterialSearchBar) findViewById(R.id.searchBar);
@@ -235,7 +240,7 @@ public class FoodList extends AppCompatActivity {
                 .build();
         searchAdapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(searchOptions) {
             @Override
-            protected void onBindViewHolder(@NonNull FoodViewHolder holder, final int position, @NonNull final Food model) {
+            protected void onBindViewHolder(@NonNull final FoodViewHolder holder, final int position, @NonNull final Food model) {
 
                 holder.foodName.setText(model.getName());
                 holder.foodPrice.setText(String.format("$ %s", model.getPrice().toString()));
@@ -256,6 +261,48 @@ public class FoodList extends AppCompatActivity {
                                 model.getImage()
                         ));
                         Toast.makeText(FoodList.this, "Added to Cart", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                //Add Favorites
+                if (localDB.isFavorites(searchAdapter.getRef(position).getKey(), Common.currentUser.getPhone())) {
+                    holder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
+                }
+
+                // click ot share
+                holder.shareImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Picasso.with(getApplicationContext())
+                                .load(model.getImage())
+                                .into(target);
+                    }
+                });
+
+                //click to change status of favorites
+                holder.fav_image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Favorites favorites = new Favorites();
+                        favorites.setFoodDescription(model.getDescription());
+                        favorites.setFoodDiscount(model.getDiscount());
+                        favorites.setFoodId(searchAdapter.getRef(position).getKey());
+                        favorites.setFoodImage(model.getImage());
+                        favorites.setFoodMenuId(model.getMenuId());
+                        favorites.setFoodName(model.getName());
+                        favorites.setFoodPrice(model.getPrice());
+                        favorites.setUserPhone(Common.currentUser.getPhone());
+
+                        if (!localDB.isFavorites(searchAdapter.getRef(position).getKey(),Common.currentUser.getPhone())) {
+                            localDB.AddToFavorites(favorites);
+                            holder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
+                            Toast.makeText(FoodList.this, "" + model.getName() + " was added to Favorites", Toast.LENGTH_SHORT).show();
+                        } else {
+                            localDB.RemoveFromFavorites(searchAdapter.getRef(position).getKey(), Common.currentUser.getPhone());
+                            holder.fav_image.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                            Toast.makeText(FoodList.this, "" + model.getName() + " was removed from Favorites", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
@@ -365,8 +412,19 @@ public class FoodList extends AppCompatActivity {
                 holder.fav_image.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+                        Favorites favorites = new Favorites();
+                        favorites.setFoodDescription(model.getDescription());
+                        favorites.setFoodDiscount(model.getDiscount());
+                        favorites.setFoodId(adapter.getRef(position).getKey());
+                        favorites.setFoodImage(model.getImage());
+                        favorites.setFoodMenuId(model.getMenuId());
+                        favorites.setFoodName(model.getName());
+                        favorites.setFoodPrice(model.getPrice());
+                        favorites.setUserPhone(Common.currentUser.getPhone());
+
                         if (!localDB.isFavorites(adapter.getRef(position).getKey(),Common.currentUser.getPhone())) {
-                            localDB.AddToFavorites(adapter.getRef(position).getKey(),Common.currentUser.getPhone());
+                            localDB.AddToFavorites(favorites);
                             holder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
                             Toast.makeText(FoodList.this, "" + model.getName() + " was added to Favorites", Toast.LENGTH_SHORT).show();
                         } else {

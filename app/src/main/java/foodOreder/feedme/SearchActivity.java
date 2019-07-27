@@ -37,6 +37,7 @@ import java.util.List;
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Database.Database;
 import foodOreder.feedme.Interface.ItemClickListener;
+import foodOreder.feedme.Model.Favorites;
 import foodOreder.feedme.Model.Food;
 import foodOreder.feedme.Model.Order;
 import foodOreder.feedme.ViewHolder.FoodViewHolder;
@@ -239,10 +240,24 @@ public class SearchActivity extends AppCompatActivity {
 
                 //click to change status of favorites
                 holder.fav_image.setOnClickListener(new View.OnClickListener() {
+
+
+
                     @Override
                     public void onClick(View v) {
+
+                        Favorites favorites = new Favorites();
+                        favorites.setFoodDescription(model.getDescription());
+                        favorites.setFoodDiscount(model.getDiscount());
+                        favorites.setFoodId(adapter.getRef(position).getKey());
+                        favorites.setFoodImage(model.getImage());
+                        favorites.setFoodMenuId(model.getMenuId());
+                        favorites.setFoodName(model.getName());
+                        favorites.setFoodPrice(model.getPrice());
+                        favorites.setUserPhone(Common.currentUser.getPhone());
+
                         if (!localDB.isFavorites(adapter.getRef(position).getKey(),Common.currentUser.getPhone())) {
-                            localDB.AddToFavorites(adapter.getRef(position).getKey(),Common.currentUser.getPhone());
+                            localDB.AddToFavorites(favorites);
                             holder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
                             Toast.makeText(SearchActivity.this, "" + model.getName() + " was added to Favorites", Toast.LENGTH_SHORT).show();
                         } else {

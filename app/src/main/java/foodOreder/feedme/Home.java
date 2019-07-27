@@ -364,6 +364,10 @@ public class Home extends AppCompatActivity
         {
             showSettingDialog();
         }
+        else if(id == R.id.nav_fav)
+        {
+            startActivity(new Intent(Home.this,FavoriteActivity.class));
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
