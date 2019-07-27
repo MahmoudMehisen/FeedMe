@@ -34,6 +34,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
@@ -42,6 +43,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -228,6 +230,11 @@ public class Cart extends AppCompatActivity
         final MaterialEditText edtComment = (MaterialEditText) order_address_comment.findViewById(R.id.edtComment);
         final RadioButton rdiShipToAddress = (RadioButton) order_address_comment.findViewById(R.id.rdiShipToAddress);
         final RadioButton rdiHomeAddress = (RadioButton) order_address_comment.findViewById(R.id.rdiHomeAddress);
+        final RadioButton rdiCOD = (RadioButton) order_address_comment.findViewById(R.id.rdiCOD);
+        final RadioButton rdiPaypal = (RadioButton) order_address_comment.findViewById(R.id.rdiPaypal);
+
+        rdiShipToAddress.setChecked(true);
+        rdiCOD.setChecked(true);
 
         if (Common.currentUser.getHomeLat().equals("0")) {
             rdiHomeAddress.setVisibility(View.INVISIBLE);
@@ -258,6 +265,7 @@ public class Cart extends AppCompatActivity
             }
         });
 
+
         alertDialog.setView(order_address_comment);
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
 
@@ -268,18 +276,36 @@ public class Cart extends AppCompatActivity
 
                 comment = edtComment.getText().toString();
 
-                Request request = new Request(
-                        Common.currentUser.getPhone(),
-                        Common.currentUser.getName(),
-                        latLocation,
-                        lngLocation,
-                        totalPrice.getText().toString(),
-                        "0",
-                        comment,
-                        "paid",
-                        cart
-                );
-                requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
+                if (rdiCOD.isChecked()) {
+
+                    Request request = new Request(
+                            Common.currentUser.getPhone(),
+                            Common.currentUser.getName(),
+                            latLocation,
+                            lngLocation,
+                            totalPrice.getText().toString(),
+                            "COD",
+                            "0",
+                            comment,
+                            "Unpaid",
+                            cart
+                    );
+                    requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
+
+                    new Database(getApplicationContext()).cleanCart();
+                    Toast.makeText(Cart.this, "Thank you , Order Place", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else if (rdiPaypal.isChecked()) {
+                    String formatAmount = totalPrice.getText().toString().replace("$", "").replace(",", "");
+
+                    PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(formatAmount), "USD", "Feed Me App Order", PayPalPayment.PAYMENT_INTENT_SALE);
+
+                    Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
+                    intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+                    intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
+                    startActivityForResult(intent, PAYPAL_REQUEST_CODE);
+                }
+
 
                 if (Common.currentUser.getHomeLat().equals("0")) {
                     final AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
@@ -316,16 +342,6 @@ public class Cart extends AppCompatActivity
                 finish();
 
 
-                /*String formatAmount = totalPrice.getText().toString().replace("$", "").replace(",", "");
-
-                PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(formatAmount), "USD", "Feed Me App Order", PayPalPayment.PAYMENT_INTENT_SALE);
-
-                Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
-                intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-                intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
-                startActivityForResult(intent, PAYPAL_REQUEST_CODE);*/
-
-
             }
         });
         alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -355,6 +371,7 @@ public class Cart extends AppCompatActivity
                                 latLocation,
                                 lngLocation,
                                 totalPrice.getText().toString(),
+                                "Paypal",
                                 "0",
                                 comment,
                                 jsonObject.getJSONObject("response").getString("state"),

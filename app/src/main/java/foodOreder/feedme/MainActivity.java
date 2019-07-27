@@ -196,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
                                                 newUser.setName("");
                                                 newUser.setHomeLat("0");
                                                 newUser.setHomeLng("0");
+                                                newUser.setBalance(0.0);
 
                                                 //add to Firebase
                                                 users.child(userPhone)
