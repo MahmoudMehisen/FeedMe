@@ -243,7 +243,6 @@ public class FoodList extends AppCompatActivity {
 
 
                 //Quick Cart
-
                 holder.quick_cart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -324,7 +323,6 @@ public class FoodList extends AppCompatActivity {
                 Picasso.with(getApplicationContext()).load(model.getImage()).into(holder.foodImage);
 
                 //Quick Cart
-
                 holder.quick_cart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

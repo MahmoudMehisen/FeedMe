@@ -120,8 +120,6 @@ public class Database extends SQLiteAssetHelper {
     }
 
 
-
-
     //Favorites
     public void AddToFavorites(String foodId, String userPhone){
         SQLiteDatabase db = getReadableDatabase();
