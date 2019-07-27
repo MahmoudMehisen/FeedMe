@@ -364,7 +364,7 @@ public class FoodList extends AppCompatActivity {
                             holder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
                             Toast.makeText(FoodList.this, "" + model.getName() + " was added to Favorites", Toast.LENGTH_SHORT).show();
                         } else {
-                            localDB.RemoveFromFavorites(adapter.getRef(position).getKey());
+                            localDB.RemoveFromFavorites(adapter.getRef(position).getKey(),Common.currentUser.getPhone());
                             holder.fav_image.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                             Toast.makeText(FoodList.this, "" + model.getName() + " was removed from Favorites", Toast.LENGTH_SHORT).show();
                         }

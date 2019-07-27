@@ -29,42 +29,7 @@ import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.Model.Order;
 import foodOreder.feedme.R;
 
-class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
-
-    public TextView cartName,cartPrice;
-    public ElegantNumberButton btn_quantity;
-    public ImageView cart_image;
-
-    private ItemClickListener itemClickListener;
-
-    public void setItemClickListener(ItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
-    }
-
-    public CartViewHolder(@NonNull View itemView) {
-        super(itemView);
-
-        btn_quantity = (ElegantNumberButton)itemView.findViewById(R.id.btn_quantity);
-        cartName = (TextView)itemView.findViewById(R.id.cartItemName);
-        cartPrice = (TextView)itemView.findViewById(R.id.cartItemPrice);
-        cart_image = (ImageView)itemView.findViewById(R.id.cart_image);
-
-        itemView.setOnCreateContextMenuListener(this);
-
-    }
-
-    @Override
-    public void onClick(View view) {
-
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Select Action");
-        menu.add(0,0,getAdapterPosition(), Common.DELETE);
-    }
-}
 
 public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
 
@@ -107,12 +72,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
                 //Calculate Total Price
                 int total = 0;
                 List<Order> orders = new Database(cart).getCart();
-                for (Order item : orders) {
+                for (Order item : orders)
                     total += (Integer.parseInt(order.getPrice())) * (Integer.parseInt(item.getQuantity()));
-                    Locale locale = new Locale("en", "US");
-                    NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-                    cart.totalPrice.setText(fmt.format(total));
-                }
+                Locale locale = new Locale("en", "US");
+                NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
+                cart.totalPrice.setText(fmt.format(total));
+
             }
         });
 
@@ -131,4 +96,25 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
     public int getItemCount() {
         return listData.size();
     }
+
+
+
+    public Order getItem (int position)
+    {
+        return  listData.get(position);
+    }
+
+    public void removeItem (int position)
+    {
+        listData.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem (Order item, int position)
+    {
+        listData.add(position, item);
+        notifyItemInserted(position);
+    }
+
+
 }

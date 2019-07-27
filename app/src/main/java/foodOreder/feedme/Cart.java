@@ -8,13 +8,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +42,7 @@ import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.rey.material.widget.SnackBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,15 +57,18 @@ import java.util.Map;
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Common.Config;
 import foodOreder.feedme.Database.Database;
+import foodOreder.feedme.Helper.RecyclerItemTouchHelper;
+import foodOreder.feedme.Interface.RecyclerItemTouchHelperListener;
 import foodOreder.feedme.Model.Order;
 import foodOreder.feedme.Model.Request;
 import foodOreder.feedme.Remote.IGoogleService;
 import foodOreder.feedme.ViewHolder.CartAdapter;
+import foodOreder.feedme.ViewHolder.CartViewHolder;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Cart extends AppCompatActivity
-        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, RecyclerItemTouchHelperListener {
 
 
     public static final int PAYPAL_REQUEST_CODE = 9999;
@@ -76,6 +84,8 @@ public class Cart extends AppCompatActivity
     Button btnPlace;
 
     IGoogleService mGoogleMapService;
+
+    RelativeLayout rootLayout;
 
     List<Order> cart = new ArrayList<>();
 
@@ -137,6 +147,10 @@ public class Cart extends AppCompatActivity
         mGoogleMapService = Common.getGoogleMapAPI();
 
 
+        rootLayout = (RelativeLayout)findViewById(R.id.rootLayout);
+
+
+
         //Runtime permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -157,6 +171,10 @@ public class Cart extends AppCompatActivity
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
         startService(intent);
 
+
+        //swipe to delete
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
         database = FirebaseDatabase.getInstance();
         requests = database.getReference("Requests");
@@ -465,4 +483,36 @@ public class Cart extends AppCompatActivity
         displayLocation();
     }
 
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof CartViewHolder)
+        {
+            String name = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition()).getProductName();
+
+            Order deleteItem = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition());
+            int deleteIndex = viewHolder.getAdapterPosition();
+
+            adapter.removeItem(deleteIndex);
+            new Database(getBaseContext()).RemoveFromFavorites(deleteItem.getProductId(), Common.currentUser.getPhone());
+
+
+            //update txttotal
+            //Calculate Total Price
+            int total = 0;
+            List<Order> orders = new Database(getBaseContext()).getCart(); /// update salem
+            for (Order item : orders)
+                total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
+            Locale locale = new Locale("en", "US");
+            NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
+            totalPrice.setText(fmt.format(total));
+
+
+            // Make Snackbar
+            Toast.makeText(getApplicationContext(),name + "removed from cart!", Toast.LENGTH_LONG).show();
+
+
+
+        }
+
+    }
 }

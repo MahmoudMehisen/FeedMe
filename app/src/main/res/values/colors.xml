@@ -42,4 +42,7 @@
     <color name="btnSignActive">#A9d440</color>
 
 
+    <color name="bgRowBackground">#FA315B</color>
+
+
 </resources>

@@ -81,9 +81,9 @@ public class Database extends SQLiteAssetHelper {
         db.execSQL(query);
     }
 
-    public void RemoveFromFavorites(String foodId){
+    public void RemoveFromFavorites(String foodId, String userPhone){
         SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("DELETE FROM Favorites WHERE FoodId ='%s';", foodId);
+        String query = String.format("DELETE FROM Favorites WHERE FoodId ='%s' and UserPhone = '%s';", foodId, userPhone);
         db.execSQL(query);
     }
 
