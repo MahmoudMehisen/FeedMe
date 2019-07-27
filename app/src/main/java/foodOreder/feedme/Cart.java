@@ -426,7 +426,7 @@ public class Cart extends AppCompatActivity
 
     private void sendNotificationOrder(final String order_number) {
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
-        Query data = tokens.orderByChild("isServerToken").equalTo(true);
+        Query data = tokens.orderByChild("serverToken").equalTo(true);
         data.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -435,6 +435,7 @@ public class Cart extends AppCompatActivity
                 {
                     serverToken = postSnapShot.getValue(Token.class);
                 }
+
                 Map<String,String> dataSend = new HashMap<>();
                 dataSend.put("title","Feed Me");
                 dataSend.put("message","You have new order "+order_number);
