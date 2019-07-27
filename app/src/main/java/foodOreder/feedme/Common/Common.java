@@ -4,8 +4,14 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import foodOreder.feedme.Model.User;
 import foodOreder.feedme.Remote.APIService;
+import foodOreder.feedme.Remote.GoogleRetrofitClient;
 import foodOreder.feedme.Remote.IGoogleService;
 import foodOreder.feedme.Remote.RetrofitClient;
 
@@ -24,7 +30,7 @@ public static final String INTENT_FOOD_ID = "FoodId";
     }
 
     public static IGoogleService getGoogleMapAPI() {
-        return RetrofitClient.getGoogleClient(GOOGLE_API_URL).create(IGoogleService.class);
+        return GoogleRetrofitClient.getGoogleClient(GOOGLE_API_URL).create(IGoogleService.class);
     }
 
 
@@ -54,5 +60,12 @@ public static final String INTENT_FOOD_ID = "FoodId";
             }
         }
         return false;
+    }
+
+    public static BigDecimal formatCurrency(String amount, Locale locale) throws  java.text.ParseException {
+        NumberFormat format = NumberFormat.getCurrencyInstance(locale);
+        if(format instanceof DecimalFormat)
+            ((DecimalFormat) format).setParseBigDecimal(true);
+        return (BigDecimal)format.parse(amount.replace("[^\\d.,]",""));
     }
 }

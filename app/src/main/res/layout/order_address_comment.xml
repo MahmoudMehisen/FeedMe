@@ -27,6 +27,11 @@
                 app:met_primaryColor="@color/colorPrimary"
                 app:met_singleLineEllipsis="true"
                 />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delivery Method : "
+                />
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -43,6 +48,38 @@
 
 
             </RadioGroup>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Payment Method : "
+                />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RadioButton
+                    android:id="@+id/rdiCOD"
+                    android:text="Cash On Delivery"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <RadioButton
+                    android:id="@+id/rdiPaypal"
+                    android:text="Paypal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <RadioButton
+                    android:id="@+id/rdiFeedMeBalance"
+                    android:text="Feed Me Balance"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+            </RadioGroup>
+            <CheckBox
+                android:id="@+id/checkHome"
+                android:text="This location is my home location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
 
 
         </LinearLayout>

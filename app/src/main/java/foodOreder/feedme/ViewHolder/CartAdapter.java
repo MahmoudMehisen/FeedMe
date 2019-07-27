@@ -71,13 +71,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
                 //update txttotal
                 //Calculate Total Price
                 int total = 0;
-                List<Order> orders = new Database(cart).getCart();
+
+                List<Order> orders = new Database(cart).getCart(Common.currentUser.getPhone());
                 for (Order item : orders)
                     total += (Integer.parseInt(order.getPrice())) * (Integer.parseInt(item.getQuantity()));
+
+
                 Locale locale = new Locale("en", "US");
                 NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
                 cart.totalPrice.setText(fmt.format(total));
-
             }
         });
 

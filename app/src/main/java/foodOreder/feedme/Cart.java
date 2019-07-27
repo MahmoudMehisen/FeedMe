@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -38,6 +39,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
@@ -47,7 +49,9 @@ import com.rey.material.widget.SnackBar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -246,11 +250,21 @@ public class Cart extends AppCompatActivity
         final MaterialEditText edtComment = (MaterialEditText) order_address_comment.findViewById(R.id.edtComment);
         final RadioButton rdiShipToAddress = (RadioButton) order_address_comment.findViewById(R.id.rdiShipToAddress);
         final RadioButton rdiHomeAddress = (RadioButton) order_address_comment.findViewById(R.id.rdiHomeAddress);
+        final RadioButton rdiCOD = (RadioButton) order_address_comment.findViewById(R.id.rdiCOD);
+        final RadioButton rdiPaypal = (RadioButton) order_address_comment.findViewById(R.id.rdiPaypal);
+        final RadioButton rdiFeedMeBalance = (RadioButton) order_address_comment.findViewById(R.id.rdiFeedMeBalance);
+        final CheckBox checkHome = (CheckBox) order_address_comment.findViewById(R.id.checkHome);
+
+        rdiShipToAddress.setChecked(true);
+        rdiCOD.setChecked(true);
 
         if (Common.currentUser.getHomeLat().equals("0")) {
             rdiHomeAddress.setVisibility(View.INVISIBLE);
+            checkHome.setVisibility(View.VISIBLE);
+
         } else {
             rdiHomeAddress.setVisibility(View.VISIBLE);
+            checkHome.setVisibility(View.INVISIBLE);
         }
 
 
@@ -286,26 +300,79 @@ public class Cart extends AppCompatActivity
 
                 comment = edtComment.getText().toString();
 
-                Request request = new Request(
-                        Common.currentUser.getPhone(),
-                        Common.currentUser.getName(),
-                        latLocation,
-                        lngLocation,
-                        totalPrice.getText().toString(),
-                        "0",
-                        comment,
-                        "paid",
-                        cart
-                );
-                requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
+                if (rdiCOD.isChecked()) {
 
-                if (Common.currentUser.getHomeLat().equals("0")) {
-                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
-                    alertDialog.setTitle("Home Location");
-                    alertDialog.setMessage("Is this location your home location?");
-                    alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                    Request request = new Request(
+                            Common.currentUser.getPhone(),
+                            Common.currentUser.getName(),
+                            latLocation,
+                            lngLocation,
+                            totalPrice.getText().toString(),
+                            "COD",
+                            "0",
+                            comment,
+                            "Unpaid",
+                            cart
+                    );
+                    requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
+
+                } else if (rdiPaypal.isChecked()) {
+                    String formatAmount = totalPrice.getText().toString().replace("$", "").replace(",", "");
+
+                    PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(formatAmount), "USD", "Feed Me App Order", PayPalPayment.PAYMENT_INTENT_SALE);
+
+                    Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
+                    intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+                    intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
+                    startActivityForResult(intent, PAYPAL_REQUEST_CODE);
+                }
+                else if(rdiFeedMeBalance.isChecked())
+                {
+                    double amount = 0;
+
+                    try{
+                        amount = Common.formatCurrency(totalPrice.getText().toString(),Locale.US).doubleValue();
+                        if(Common.currentUser.getBalance() >= amount)
+                        {
+                            Request request = new Request(
+                                    Common.currentUser.getPhone(),
+                                    Common.currentUser.getName(),
+                                    latLocation,
+                                    lngLocation,
+                                    totalPrice.getText().toString(),
+                                    "Feed Me Balance",
+                                    "0",
+                                    comment,
+                                    "Paid",
+                                    cart
+                            );
+                            requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
+
+                            double balance = Common.currentUser.getBalance() - amount;
+                            Common.currentUser.setBalance(balance);
+                            Map<String,Object> update_balance = new HashMap<>();
+                            update_balance.put("balance",balance);
+                            FirebaseDatabase.getInstance()
+                                    .getReference("Users")
+                                    .child(Common.currentUser.getPhone())
+                                    .updateChildren(update_balance);
+
+                        }
+                        else
+                        {
+                            Toast.makeText(Cart.this,"Your balance not enough, Please choose other payment",Toast.LENGTH_SHORT).show();
+                        }
+                    }catch (ParseException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+
+                if (Common.currentUser.getHomeLat().equals("0") && checkHome.isChecked()) {
+
                             Common.currentUser.setHomeLat(String.valueOf(mLastLocation.getLatitude()));
                             Common.currentUser.setHomeLng(String.valueOf(mLastLocation.getLongitude()));
                             Map<String, Object> HomeLocation = new HashMap<>();
@@ -319,29 +386,11 @@ public class Cart extends AppCompatActivity
                                     .updateChildren(HomeLocation);
 
 
-                        }
-                    });
-                    alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                        }
-                    });
-                    alertDialog.show();
                 }
 
-                new Database(getApplicationContext()).cleanCart();
+                new Database(getApplicationContext()).cleanCart(Common.currentUser.getPhone());
                 Toast.makeText(Cart.this, "Thank you , Order Placed", Toast.LENGTH_SHORT).show();
                 finish();
-
-
-                /*String formatAmount = totalPrice.getText().toString().replace("$", "").replace(",", "");
-
-                PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(formatAmount), "USD", "Feed Me App Order", PayPalPayment.PAYMENT_INTENT_SALE);
-
-                Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
-                intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-                intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
-                startActivityForResult(intent, PAYPAL_REQUEST_CODE);*/
 
 
             }
@@ -373,6 +422,7 @@ public class Cart extends AppCompatActivity
                                 latLocation,
                                 lngLocation,
                                 totalPrice.getText().toString(),
+                                "Paypal",
                                 "0",
                                 comment,
                                 jsonObject.getJSONObject("response").getString("state"),
@@ -380,9 +430,6 @@ public class Cart extends AppCompatActivity
                         );
                         requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
 
-                        new Database(getApplicationContext()).cleanCart();
-                        Toast.makeText(Cart.this, "Thank you , Order Place", Toast.LENGTH_SHORT).show();
-                        finish();
 
 
                     } catch (JSONException e) {
@@ -399,7 +446,7 @@ public class Cart extends AppCompatActivity
 
     private void loadListFood() {
 
-        cart = new Database(this).getCart();
+        cart = new Database(this).getCart(Common.currentUser.getPhone());
         adapter = new CartAdapter(cart, this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
@@ -428,7 +475,7 @@ public class Cart extends AppCompatActivity
         //remove item bu position
         cart.remove(position);
         //delete old data form SQLite
-        new Database(this).cleanCart();
+        new Database(this).cleanCart(Common.currentUser.getPhone());
         //udpate new data from list<order> to SQLite
         for (Order item : cart) {
             new Database(this).addToCart(item);
@@ -499,7 +546,7 @@ public class Cart extends AppCompatActivity
             //update txttotal
             //Calculate Total Price
             int total = 0;
-            List<Order> orders = new Database(getBaseContext()).getCart(); /// update salem
+            List<Order> orders = new Database(getBaseContext()).getCart(Common.currentUser.getPhone()); /// update salem
             for (Order item : orders)
                 total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
             Locale locale = new Locale("en", "US");
