@@ -46,6 +46,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoriteViewHolder> {
 
         favoriteViewHolder.foodName.setText(favorites.get(pos).getFoodName());
         favoriteViewHolder.foodPrice.setText(String.format("$ %s",favorites.get(pos).getFoodPrice().toString()));
+                System.out.println(favorites.get(pos).getFoodImage());
                 Picasso.with(context).load(favorites.get(pos).getFoodImage()).into(favoriteViewHolder.foodImage);
 
                 //Quick Cart
@@ -88,7 +89,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoriteViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 0;
+        return favorites.size();
     }
     public void removeItem (int position)
     {

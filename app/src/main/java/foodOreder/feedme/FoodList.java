@@ -232,6 +232,7 @@ public class FoodList extends AppCompatActivity {
             }
         });
 
+
     }
 
     private void startSearch(CharSequence text) {
@@ -332,6 +333,10 @@ public class FoodList extends AppCompatActivity {
         recyclerView.setAdapter(searchAdapter);
         searchAdapter.startListening();
         swipeRefreshLayout.setRefreshing(false);
+
+        //Animation
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
 
     }
 
@@ -462,6 +467,10 @@ public class FoodList extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         adapter.startListening();
         swipeRefreshLayout.setRefreshing(false);
+
+        //Animation
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
 
     }
 }

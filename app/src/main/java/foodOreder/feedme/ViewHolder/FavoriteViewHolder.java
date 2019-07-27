@@ -16,7 +16,7 @@ public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.
 
 
     public TextView foodName,foodPrice;
-    public ImageView foodImage, fav_image,shareImage, quick_cart;
+    public ImageView foodImage, quick_cart;
     public RelativeLayout view_background;
     public LinearLayout view_foreground;
 

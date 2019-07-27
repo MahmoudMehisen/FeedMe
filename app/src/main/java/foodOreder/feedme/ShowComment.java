@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -155,6 +157,9 @@ public class ShowComment extends AppCompatActivity {
 
             }
         });
+        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recyclerView.getContext(),R.anim.layout_fall_down);
+        recyclerView.setLayoutAnimation(controller);
+
 
     }
 
@@ -164,5 +169,9 @@ public class ShowComment extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         adapter.startListening();
         mSwipeRefreshLayout.setRefreshing(false);
+
+        //Animation
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 }

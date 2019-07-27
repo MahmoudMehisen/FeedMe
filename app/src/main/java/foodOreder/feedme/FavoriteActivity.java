@@ -45,12 +45,13 @@ public class FavoriteActivity extends AppCompatActivity implements RecyclerItemT
 
 
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerFood);
-        recyclerView.setHasFixedSize(true);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerFavorite);
+
 
         layoutManager = new LinearLayoutManager(this);
 
         recyclerView.setLayoutManager(layoutManager);
+
         LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recyclerView.getContext(),R.anim.layout_fall_down);
         recyclerView.setLayoutAnimation(controller);
 
@@ -58,6 +59,7 @@ public class FavoriteActivity extends AppCompatActivity implements RecyclerItemT
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
         loadFavorites();
+
 
     }
 

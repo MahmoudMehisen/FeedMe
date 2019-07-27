@@ -36,7 +36,8 @@
 
 
     <LinearLayout
-
+        android:id="@+id/view_foreground"
+        android:background="@color/white"
         android:orientation="vertical"
         android:weightSum="5"
         android:layout_width="match_parent"

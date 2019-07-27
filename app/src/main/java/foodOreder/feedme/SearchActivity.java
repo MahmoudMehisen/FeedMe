@@ -14,6 +14,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -129,6 +131,8 @@ public class SearchActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
 
         recyclerView.setLayoutManager(layoutManager);
+        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recyclerView.getContext(),R.anim.layout_fall_down);
+        recyclerView.setLayoutAnimation(controller);
 
 
         materialSearchBar = (MaterialSearchBar) findViewById(R.id.searchBar);
@@ -184,6 +188,9 @@ public class SearchActivity extends AppCompatActivity {
         });
 
         loadAllFoods();
+        //Animation
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
 
     }
 
@@ -295,6 +302,10 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         adapter.startListening();
         swipeRefreshLayout.setRefreshing(false);
+
+        //Animation
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
     private void loadSuggest() {
@@ -428,6 +439,10 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setAdapter(searchAdapter);
         searchAdapter.startListening();
         swipeRefreshLayout.setRefreshing(false);
+
+        //Animation
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
 }

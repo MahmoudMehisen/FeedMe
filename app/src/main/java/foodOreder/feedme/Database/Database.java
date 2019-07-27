@@ -24,18 +24,15 @@ public class Database extends SQLiteAssetHelper {
     }
 
 
-
-
-    public boolean checkFoodExists(String FoodId, String userPhone){
+    public boolean checkFoodExists(String FoodId, String userPhone) {
         boolean flag = false;
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = null;
         String SQLQuery = String.format("SELECT * FROM OrderDetail WHERE UserPhone = '%s' AND ProductId = '%s'", userPhone, FoodId);
         cursor = db.rawQuery(SQLQuery, null);
-        if(cursor.getCount()>0){
+        if (cursor.getCount() > 0) {
             flag = true;
-        }
-        else{
+        } else {
             flag = false;
         }
         cursor.close();
@@ -47,7 +44,7 @@ public class Database extends SQLiteAssetHelper {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-        String[] sqlSelect = {"UserPhone",  "ProductId","ProductName", "Quantity", "Price", "Discount", "Image"};
+        String[] sqlSelect = {"UserPhone", "ProductId", "ProductName", "Quantity", "Price", "Discount", "Image"};
 
         String sqlTable = "OrderDetail";
         qb.setTables(sqlTable);
@@ -95,15 +92,15 @@ public class Database extends SQLiteAssetHelper {
     }
 
     public int getCountCart(String userPhone) {
-        int count=0;
+        int count = 0;
         SQLiteDatabase db = getReadableDatabase();
         String query = String.format("SELECT COUNT(*) FROM OrderDetail WHERE UserPhone = '%s'", userPhone);
 
-        Cursor cursor =db.rawQuery(query, null);
-        if(cursor.moveToFirst()){
-            do{
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
                 count = cursor.getInt(0);
-            }while(cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         return count;
     }
@@ -122,32 +119,33 @@ public class Database extends SQLiteAssetHelper {
 
 
     //Favorites
-    public void AddToFavorites(Favorites food){
+    public void AddToFavorites(Favorites food) {
         SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("INSERT INTO Favorites(FoodId,FoodName,FoodPrice,FoodMenuId,FoodDiscount,FoodDescription,UserPhone) VALUES ('%s', '%s','%s','%s','%s','%s', '%s','%s');",
+        String query = String.format("INSERT INTO Favorites(FoodId,FoodName,FoodPrice,FoodMenuId,FoodDiscount,FoodDescription,UserPhone,FoodImage) VALUES ('%s', '%s','%s','%s','%s','%s', '%s','%s');",
                 food.getFoodId(),
                 food.getFoodName(),
                 food.getFoodPrice(),
                 food.getFoodMenuId(),
                 food.getFoodDiscount(),
                 food.getFoodDescription(),
-                food.getUserPhone()
-                );
+                food.getUserPhone(),
+                food.getFoodImage()
+        );
         db.execSQL(query);
     }
 
-    public void RemoveFromFavorites(String foodId, String userPhone){
+    public void RemoveFromFavorites(String foodId, String userPhone) {
         SQLiteDatabase db = getReadableDatabase();
         String query = String.format("DELETE FROM Favorites WHERE FoodId ='%s' and UserPhone = '%s';", foodId, userPhone);
         db.execSQL(query);
     }
 
-    public boolean isFavorites(String foodId, String userPhone){
+    public boolean isFavorites(String foodId, String userPhone) {
         SQLiteDatabase db = getReadableDatabase();
         String query = String.format("SELECT * FROM Favorites WHERE FoodId ='%s' and UserPhone = '%s';", foodId, userPhone);
 
-        Cursor cursor =db.rawQuery(query, null);
-        if(cursor.getCount()<=0){
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.getCount() <= 0) {
             cursor.close();
             return false;
         }
@@ -157,7 +155,7 @@ public class Database extends SQLiteAssetHelper {
 
     public void removeFromCart(String productId, String phone) {
         SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("DELETE FROM OrderDetail WHERE UserPhone = '%s' and ProductId='%s'", phone,productId);
+        String query = String.format("DELETE FROM OrderDetail WHERE UserPhone = '%s' and ProductId='%s'", phone, productId);
         db.execSQL(query);
     }
 
@@ -165,7 +163,7 @@ public class Database extends SQLiteAssetHelper {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-        String[] sqlSelect = {"UserPhone",  "FoodId","FoodName", "FoodPrice", "FoodMenuId", "FoodImage", "FoodDiscount","FoodDescription"};
+        String[] sqlSelect = {"UserPhone", "FoodId", "FoodName", "FoodPrice", "FoodMenuId", "FoodImage", "FoodDiscount", "FoodDescription"};
 
         String sqlTable = "Favorites";
         qb.setTables(sqlTable);
@@ -184,6 +182,7 @@ public class Database extends SQLiteAssetHelper {
                         c.getString(c.getColumnIndex("FoodDescription")),
                         c.getString(c.getColumnIndex("UserPhone"))
                 ));
+
 
 
             } while (c.moveToNext());
