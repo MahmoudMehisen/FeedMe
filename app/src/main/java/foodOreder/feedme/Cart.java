@@ -311,7 +311,7 @@ public class Cart extends AppCompatActivity
                     alertDialog.show();
                 }
 
-                new Database(getApplicationContext()).cleanCart();
+                new Database(getApplicationContext()).cleanCart(Common.currentUser.getPhone());
                 Toast.makeText(Cart.this, "Thank you , Order Placed", Toast.LENGTH_SHORT).show();
                 finish();
 
@@ -362,7 +362,7 @@ public class Cart extends AppCompatActivity
                         );
                         requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
 
-                        new Database(getApplicationContext()).cleanCart();
+                        new Database(getApplicationContext()).cleanCart(Common.currentUser.getPhone());
                         Toast.makeText(Cart.this, "Thank you , Order Place", Toast.LENGTH_SHORT).show();
                         finish();
 
@@ -381,7 +381,7 @@ public class Cart extends AppCompatActivity
 
     private void loadListFood() {
 
-        cart = new Database(this).getCart();
+        cart = new Database(this).getCart(Common.currentUser.getPhone());
         adapter = new CartAdapter(cart, this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
@@ -410,7 +410,7 @@ public class Cart extends AppCompatActivity
         //remove item bu position
         cart.remove(position);
         //delete old data form SQLite
-        new Database(this).cleanCart();
+        new Database(this).cleanCart(Common.currentUser.getPhone());
         //udpate new data from list<order> to SQLite
         for (Order item : cart) {
             new Database(this).addToCart(item);

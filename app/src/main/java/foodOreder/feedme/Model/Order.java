@@ -1,7 +1,7 @@
 package foodOreder.feedme.Model;
 
 public class Order {
-    private int ID;
+    private String UserPhone;
     private String ProductId;
     private String ProductName;
     private String Quantity;
@@ -12,7 +12,8 @@ public class Order {
     public Order() {
     }
 
-    public Order(String productId, String productName, String quantity, String price, String discount, String image) {
+    public Order(String userPhone, String productId, String productName, String quantity, String price, String discount, String image) {
+        UserPhone = userPhone;
         ProductId = productId;
         ProductName = productName;
         Quantity = quantity;
@@ -22,14 +23,52 @@ public class Order {
     }
 
 
-    public Order(int ID, String productId, String productName, String quantity, String price, String discount, String image) {
-        this.ID = ID;
+    public String getUserPhone() {
+        return UserPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        UserPhone = userPhone;
+    }
+
+    public String getProductId() {
+        return ProductId;
+    }
+
+    public void setProductId(String productId) {
         ProductId = productId;
+    }
+
+    public String getProductName() {
+        return ProductName;
+    }
+
+    public void setProductName(String productName) {
         ProductName = productName;
+    }
+
+    public String getQuantity() {
+        return Quantity;
+    }
+
+    public void setQuantity(String quantity) {
         Quantity = quantity;
+    }
+
+    public String getPrice() {
+        return Price;
+    }
+
+    public void setPrice(String price) {
         Price = price;
+    }
+
+    public String getDiscount() {
+        return Discount;
+    }
+
+    public void setDiscount(String discount) {
         Discount = discount;
-        Image = image;
     }
 
     public String getImage() {
@@ -38,50 +77,5 @@ public class Order {
 
     public void setImage(String image) {
         Image = image;
-    }
-
-    public int getID() {
-        return ID;
-    }
-
-    public void setProductName(String productName) {
-        ProductName = productName;
-    }
-
-    public String getProductName() {
-        return ProductName;
-    }
-
-    public void setProductId(String productId) {
-        ProductId = productId;
-    }
-
-
-    public void setQuantity(String quantity) {
-        Quantity = quantity;
-    }
-
-    public void setPrice(String price) {
-        Price = price;
-    }
-
-    public void setDiscount(String discount) {
-        Discount = discount;
-    }
-
-    public String getProductId() {
-        return ProductId;
-    }
-
-    public String getQuantity() {
-        return Quantity;
-    }
-
-    public String getPrice() {
-        return Price;
-    }
-
-    public String getDiscount() {
-        return Discount;
     }
 }
