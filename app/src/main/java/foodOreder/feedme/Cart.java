@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -538,11 +539,11 @@ public class Cart extends AppCompatActivity
         {
             String name = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition()).getProductName();
 
-            Order deleteItem = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition());
-            int deleteIndex = viewHolder.getAdapterPosition();
+           final Order deleteItem = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition());
+           final int deleteIndex = viewHolder.getAdapterPosition();
 
             adapter.removeItem(deleteIndex);
-            new Database(getBaseContext()).RemoveFromFavorites(deleteItem.getProductId(), Common.currentUser.getPhone());
+            new Database(getBaseContext()).removeFromCart(deleteItem.getProductId(), Common.currentUser.getPhone());
 
 
             //update txttotal
@@ -557,7 +558,27 @@ public class Cart extends AppCompatActivity
 
 
             // Make Snackbar
-            Toast.makeText(getApplicationContext(),name + "removed from cart!", Toast.LENGTH_LONG).show();
+            Snackbar snackbar = Snackbar.make(rootLayout,name +" removed from cart!",Snackbar.LENGTH_LONG);
+            snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    adapter.restoreItem(deleteItem,deleteIndex);
+                    new Database(getApplicationContext()).addToCart(deleteItem);
+
+                    //update txttotal
+                    //Calculate Total Price
+                    int total = 0;
+                    List<Order> orders = new Database(getBaseContext()).getCart(Common.currentUser.getPhone()); /// update salem
+                    for (Order item : orders)
+                        total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
+                    Locale locale = new Locale("en", "US");
+                    NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
+                    totalPrice.setText(fmt.format(total));
+
+                }
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();
 
 
 
