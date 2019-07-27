@@ -249,7 +249,7 @@ public class FoodList extends AppCompatActivity {
                     public void onClick(View v) {
                         new Database(getApplicationContext()).addToCart(new Order(
                                 Common.currentUser.getPhone(),
-                                adapter.getRef(position).getKey(),
+                                searchAdapter.getRef(position).getKey(),
                                 model.getName(),
                                 "1",
                                 model.getPrice(),

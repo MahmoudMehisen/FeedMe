@@ -9,9 +9,7 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
-import foodOreder.feedme.FoodDetail;
 import foodOreder.feedme.Model.Order;
 
 
@@ -48,7 +46,7 @@ public class Database extends SQLiteAssetHelper {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-        String[] sqlSelect = {"UserPhone", "ProductName", "ProductId", "Quantity", "Price", "Discount", "Image"};
+        String[] sqlSelect = {"UserPhone",  "ProductId","ProductName", "Quantity", "Price", "Discount", "Image"};
 
         String sqlTable = "OrderDetail";
         qb.setTables(sqlTable);
@@ -59,8 +57,8 @@ public class Database extends SQLiteAssetHelper {
 
                 result.add(new Order(
                         c.getString(c.getColumnIndex("UserPhone")),
-                        c.getString(c.getColumnIndex("ProductName")),
                         c.getString(c.getColumnIndex("ProductId")),
+                        c.getString(c.getColumnIndex("ProductName")),
                         c.getString(c.getColumnIndex("Quantity")),
                         c.getString(c.getColumnIndex("Price")),
                         c.getString(c.getColumnIndex("Discount")),
@@ -148,5 +146,11 @@ public class Database extends SQLiteAssetHelper {
         }
         cursor.close();
         return true;
+    }
+
+    public void removeFromCart(String productId, String phone) {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("DELETE FROM OrderDetail WHERE UserPhone = '%s' and ProductId='%s'", phone,productId);
+        db.execSQL(query);
     }
 }
