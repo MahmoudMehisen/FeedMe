@@ -218,7 +218,6 @@ public class FoodList extends AppCompatActivity {
             @Override
             public void onSearchConfirmed(CharSequence text) {
                 startSearch(text);
-
             }
 
             @Override
@@ -238,15 +237,17 @@ public class FoodList extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull FoodViewHolder holder, final int position, @NonNull final Food model) {
 
                 holder.foodName.setText(model.getName());
-                holder.foodPrice.setText(String.format("$ %s",model.getPrice().toString()));
+                holder.foodPrice.setText(String.format("$ %s", model.getPrice().toString()));
                 Picasso.with(getApplicationContext()).load(model.getImage()).into(holder.foodImage);
 
 
                 //Quick Cart
+
                 holder.quick_cart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         new Database(getApplicationContext()).addToCart(new Order(
+                                Common.currentUser.getPhone(),
                                 adapter.getRef(position).getKey(),
                                 model.getName(),
                                 "1",
@@ -254,12 +255,9 @@ public class FoodList extends AppCompatActivity {
                                 model.getDiscount(),
                                 model.getImage()
                         ));
-                        Toast.makeText(FoodList.this,"Added to Cart",Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(FoodList.this, "Added to Cart", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
                 final Food food = model;
                 //System.out.println(food.getName());
                 holder.setItemClickListener(new ItemClickListener() {
@@ -319,29 +317,35 @@ public class FoodList extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull final FoodViewHolder holder, final int position, @NonNull final Food model) {
 
                 holder.foodName.setText(model.getName());
-                holder.foodPrice.setText(String.format("$ %s",model.getPrice().toString()));
+                holder.foodPrice.setText(String.format("$ %s", model.getPrice().toString()));
                 Picasso.with(getApplicationContext()).load(model.getImage()).into(holder.foodImage);
 
                 //Quick Cart
+
                 holder.quick_cart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new Database(getApplicationContext()).addToCart(new Order(
-                                adapter.getRef(position).getKey(),
-                                model.getName(),
-                                "1",
-                                model.getPrice(),
-                                model.getDiscount(),
-                                model.getImage()
-                        ));
-                        Toast.makeText(FoodList.this,"Added to Cart",Toast.LENGTH_SHORT).show();
+                        boolean isExist = new Database(getBaseContext()).checkFoodExists(adapter.getRef(position).getKey(), Common.currentUser.getPhone());
+                        if (!isExist) {
+                            new Database(getApplicationContext()).addToCart(new Order(
+                                    Common.currentUser.getPhone(),
+                                    adapter.getRef(position).getKey(),
+                                    model.getName(),
+                                    "1",
+                                    model.getPrice(),
+                                    model.getDiscount(),
+                                    model.getImage()
+                            ));
+                        } else {
+                            new Database(getBaseContext()).IncreaseCart(Common.currentUser.getPhone(), adapter.getRef(position).getKey());
+                        }
+                        Toast.makeText(FoodList.this, "Added to Cart", Toast.LENGTH_SHORT).show();
 
                     }
                 });
 
-
                 //Add Favorites
-                if (localDB.isFavorites(adapter.getRef(position).getKey())) {
+                if (localDB.isFavorites(adapter.getRef(position).getKey(), Common.currentUser.getPhone())) {
                     holder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
                 }
 
@@ -355,16 +359,16 @@ public class FoodList extends AppCompatActivity {
                     }
                 });
 
-                //click to change status of favorits
+                //click to change status of favorites
                 holder.fav_image.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!localDB.isFavorites(adapter.getRef(position).getKey())) {
-                            localDB.AddToFavorites(adapter.getRef(position).getKey());
+                        if (!localDB.isFavorites(adapter.getRef(position).getKey(), Common.currentUser.getPhone())) {
+                            localDB.AddToFavorites(adapter.getRef(position).getKey(), Common.currentUser.getPhone());
                             holder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
                             Toast.makeText(FoodList.this, "" + model.getName() + " was added to Favorites", Toast.LENGTH_SHORT).show();
                         } else {
-                            localDB.RemoveFromFavorites(adapter.getRef(position).getKey());
+                            localDB.RemoveFromFavorites(adapter.getRef(position).getKey(), Common.currentUser.getPhone());
                             holder.fav_image.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                             Toast.makeText(FoodList.this, "" + model.getName() + " was removed from Favorites", Toast.LENGTH_SHORT).show();
                         }

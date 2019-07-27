@@ -170,7 +170,7 @@ public class Home extends AppCompatActivity
                 startActivity(carIntent);
             }
         });
-        fab.setCount(new Database(this).getCountCart());
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
 
         loadMenu();
 
@@ -249,7 +249,7 @@ public class Home extends AppCompatActivity
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        fab.setCount(new Database(this).getCountCart());
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
 
         if (adapter != null) {
             adapter.startListening();

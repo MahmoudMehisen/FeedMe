@@ -272,7 +272,6 @@ public class Cart extends AppCompatActivity
             }
         });
 
-
         alertDialog.setView(order_address_comment);
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
 
@@ -371,7 +370,7 @@ public class Cart extends AppCompatActivity
 
                 }
 
-                new Database(getApplicationContext()).cleanCart();
+                new Database(getApplicationContext()).cleanCart(Common.currentUser.getPhone());
                 Toast.makeText(Cart.this, "Thank you , Order Placed", Toast.LENGTH_SHORT).show();
                 finish();
 
@@ -429,7 +428,7 @@ public class Cart extends AppCompatActivity
 
     private void loadListFood() {
 
-        cart = new Database(this).getCart();
+        cart = new Database(this).getCart(Common.currentUser.getPhone());
         adapter = new CartAdapter(cart, this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
@@ -458,7 +457,7 @@ public class Cart extends AppCompatActivity
         //remove item bu position
         cart.remove(position);
         //delete old data form SQLite
-        new Database(this).cleanCart();
+        new Database(this).cleanCart(Common.currentUser.getPhone());
         //udpate new data from list<order> to SQLite
         for (Order item : cart) {
             new Database(this).addToCart(item);
