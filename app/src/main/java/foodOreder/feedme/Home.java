@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 
@@ -76,8 +79,6 @@ public class Home extends AppCompatActivity
 
     HashMap<String, String> imageList;
     SliderLayout mSlider;
-
-
 
 
     @Override
@@ -322,7 +323,6 @@ public class Home extends AppCompatActivity
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.refreshBtn) {
@@ -360,10 +360,51 @@ public class Home extends AppCompatActivity
         } else if (id == R.id.nav_update_name) {
             showChangePasswordDialog();
         }
+        else if(id == R.id.nav_setting)
+        {
+            showSettingDialog();
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showSettingDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
+        alertDialog.setTitle("SETTINGS");
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View layout_setting = inflater.inflate(R.layout.setting_layout, null);
+        final CheckBox checkBox = (CheckBox) layout_setting.findViewById(R.id.ckb_sub_new);
+        Paper.init(this);
+        String isSubscribe = Paper.book().read("sub_new");
+        if(isSubscribe == null || TextUtils.isEmpty(isSubscribe) || isSubscribe.equals("false"))
+            checkBox.setChecked(false);
+        else
+            checkBox.setChecked(true);
+
+        alertDialog.setView(layout_setting);
+
+
+
+        //Button
+        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(checkBox.isChecked())
+                {
+                    FirebaseMessaging.getInstance().subscribeToTopic(Common.topicName);
+                    Paper.book().write("sub_new","true");
+                }
+                else {
+                    FirebaseMessaging.getInstance().subscribeToTopic(Common.topicName);
+                    Paper.book().write("sub_new","false");
+                }
+            }
+        });
+
+        alertDialog.show();
     }
 
     private void showChangePasswordDialog() {
@@ -374,7 +415,7 @@ public class Home extends AppCompatActivity
 
         LayoutInflater inflater = LayoutInflater.from(this);
         View layout_name = inflater.inflate(R.layout.update_name_layout, null);
-        final MaterialEditText edtName = (MaterialEditText)layout_name.findViewById(R.id.edtName);
+        final MaterialEditText edtName = (MaterialEditText) layout_name.findViewById(R.id.edtName);
 
         alertDialog.setView(layout_name);
 
@@ -388,10 +429,10 @@ public class Home extends AppCompatActivity
                 final android.app.AlertDialog waitingDialog = new SpotsDialog(Home.this);
                 waitingDialog.show();
 
-                Map<String,Object> update_name= new HashMap<>();
-                update_name.put("name",edtName.getText().toString());
+                Map<String, Object> update_name = new HashMap<>();
+                update_name.put("name", edtName.getText().toString());
 
-                 FirebaseDatabase.getInstance()
+                FirebaseDatabase.getInstance()
                         .getReference("Users")
                         .child(Common.currentUser.getPhone())
                         .updateChildren(update_name)
@@ -404,8 +445,6 @@ public class Home extends AppCompatActivity
 
                             }
                         });
-
-
 
 
             }

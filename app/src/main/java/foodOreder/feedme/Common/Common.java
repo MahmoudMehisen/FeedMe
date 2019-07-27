@@ -16,9 +16,12 @@ import foodOreder.feedme.Remote.IGoogleService;
 import foodOreder.feedme.Remote.RetrofitClient;
 
 public class Common {
+
+    public static String topicName ="News";
+
     public static User currentUser;
 
-public static final String INTENT_FOOD_ID = "FoodId";
+    public static final String INTENT_FOOD_ID = "FoodId";
 
     private static final String BASE_URL = "https://fcm.googleapis.com/";
 
@@ -48,7 +51,7 @@ public static final String INTENT_FOOD_ID = "FoodId";
     public static final String PWD_KEY = "Password";
 
     public static boolean isConnectedToInternet(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         if (connectivityManager != null) {
             NetworkInfo[] info = connectivityManager.getAllNetworkInfo();
@@ -62,10 +65,10 @@ public static final String INTENT_FOOD_ID = "FoodId";
         return false;
     }
 
-    public static BigDecimal formatCurrency(String amount, Locale locale) throws  java.text.ParseException {
+    public static BigDecimal formatCurrency(String amount, Locale locale) throws java.text.ParseException {
         NumberFormat format = NumberFormat.getCurrencyInstance(locale);
-        if(format instanceof DecimalFormat)
+        if (format instanceof DecimalFormat)
             ((DecimalFormat) format).setParseBigDecimal(true);
-        return (BigDecimal)format.parse(amount.replace("[^\\d.,]",""));
+        return (BigDecimal) format.parse(amount.replace("[^\\d.,]", ""));
     }
 }
