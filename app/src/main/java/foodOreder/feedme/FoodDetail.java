@@ -1,6 +1,7 @@
 package foodOreder.feedme;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -8,12 +9,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.QuickContactBadge;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +36,7 @@ import foodOreder.feedme.Database.Database;
 import foodOreder.feedme.Model.Food;
 import foodOreder.feedme.Model.Order;
 import foodOreder.feedme.Model.Rating;
+import info.hoang8f.widget.FButton;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -49,6 +54,8 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     FirebaseDatabase database;
     DatabaseReference foods;
     DatabaseReference ratingTbl;
+
+    FButton btnShowComment;
 
     Food currentFood;
 
@@ -72,10 +79,22 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
         setContentView(R.layout.activity_food_detail);
 
+        btnShowComment = (FButton) findViewById(R.id.btnShowComment);
+        btnShowComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FoodDetail.this, ShowComment.class);
+                intent.putExtra(Common.INTENT_FOOD_ID, foodId);
+                startActivity(intent);
+            }
+        });
+
         //Firebase
         database = FirebaseDatabase.getInstance();
         foods = database.getReference("Foods");
         ratingTbl = database.getReference("Rating");
+
+
 
 
         numberButton = (ElegantNumberButton) findViewById(R.id.numberButton);
@@ -213,6 +232,18 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         final Rating rating = new Rating(Common.currentUser.getPhone(), foodId, String.valueOf(value), comments);
         final String ratingId = Common.currentUser.getPhone()+"-"+rating.getFoodId();
 
+
+        // fix user can rate multiple times
+
+        ratingTbl.push().setValue(rating).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                Toast.makeText(FoodDetail.this, "Thank you for submitting your feedback", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        /*
         ratingTbl.child(ratingId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -234,7 +265,9 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
             }
 
+
         });
         Toast.makeText(FoodDetail.this, "Thank you for submitting your feedback", Toast.LENGTH_SHORT).show();
+        */
     }
 }
