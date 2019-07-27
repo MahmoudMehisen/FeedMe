@@ -335,7 +335,7 @@ public class Cart extends AppCompatActivity
 
                     try{
                         amount = Common.formatCurrency(totalPrice.getText().toString(),Locale.US).doubleValue();
-                        if(Common.currentUser.getBalance() >= amount)
+                        if(Double.parseDouble(Common.currentUser.getBalance().toString()) >= amount)
                         {
                             Request request = new Request(
                                     Common.currentUser.getPhone(),
@@ -351,7 +351,7 @@ public class Cart extends AppCompatActivity
                             );
                             requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
 
-                            double balance = Common.currentUser.getBalance() - amount;
+                            double balance = Double.parseDouble(Common.currentUser.getBalance().toString()) - amount;
                             Common.currentUser.setBalance(balance);
                             Map<String,Object> update_balance = new HashMap<>();
                             update_balance.put("balance",balance);

@@ -2,7 +2,7 @@ package foodOreder.feedme.Model;
 
 public class User {
     private String name,password,phone,isStaff, SecureCode,homeLat,homeLng;
-    private double balance;
+    private Object balance;
 
     public String getSecureCode() {
         return SecureCode;
@@ -21,11 +21,11 @@ public class User {
         this.homeLng = "0";
     }
 
-    public double getBalance() {
+    public Object getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(Object balance) {
         this.balance = balance;
     }
 
