@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -37,15 +36,19 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.rey.material.widget.SnackBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,11 +67,18 @@ import foodOreder.feedme.Common.Config;
 import foodOreder.feedme.Database.Database;
 import foodOreder.feedme.Helper.RecyclerItemTouchHelper;
 import foodOreder.feedme.Interface.RecyclerItemTouchHelperListener;
+import foodOreder.feedme.Model.DataMessage;
+import foodOreder.feedme.Model.MyResponse;
 import foodOreder.feedme.Model.Order;
 import foodOreder.feedme.Model.Request;
+import foodOreder.feedme.Model.Token;
+import foodOreder.feedme.Remote.APIService;
 import foodOreder.feedme.Remote.IGoogleService;
 import foodOreder.feedme.ViewHolder.CartAdapter;
 import foodOreder.feedme.ViewHolder.CartViewHolder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -95,6 +105,8 @@ public class Cart extends AppCompatActivity
     List<Order> cart = new ArrayList<>();
 
     CartAdapter adapter;
+
+    APIService mService;
     //Paypal payment
     static PayPalConfiguration config = new PayPalConfiguration()
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX) //use sandbox because we test
@@ -150,6 +162,8 @@ public class Cart extends AppCompatActivity
         setContentView(R.layout.activity_cart);
 
         mGoogleMapService = Common.getGoogleMapAPI();
+
+        mService = Common.getFCMService();
 
 
         rootLayout = (RelativeLayout)findViewById(R.id.rootLayout);
@@ -391,9 +405,11 @@ public class Cart extends AppCompatActivity
 
                 }
 
+
+                String order_number = String.valueOf(System.currentTimeMillis());
                 new Database(getApplicationContext()).cleanCart(Common.currentUser.getPhone());
                 Toast.makeText(Cart.this, "Thank you , Order Placed", Toast.LENGTH_SHORT).show();
-                finish();
+                sendNotificationOrder(order_number);
 
 
             }
@@ -406,6 +422,61 @@ public class Cart extends AppCompatActivity
         });
         alertDialog.show();
 
+    }
+
+    private void sendNotificationOrder(final String order_number) {
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query data = tokens.orderByChild("isServerToken").equalTo(true);
+        data.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Token serverToken = null;
+                for(DataSnapshot postSnapShot:dataSnapshot.getChildren())
+                {
+                    serverToken = postSnapShot.getValue(Token.class);
+                }
+                Map<String,String> dataSend = new HashMap<>();
+                dataSend.put("title","Feed Me");
+                dataSend.put("message","You have new order "+order_number);
+                DataMessage dataMessage = new DataMessage(serverToken.getToken(),dataSend);
+
+                String test = new Gson().toJson(dataMessage);
+                Log.d("Content",test);
+
+                mService.sendNorification(dataMessage)
+                        .enqueue(new Callback<MyResponse>() {
+                            @Override
+                            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                if(response.code() == 200)
+                                {
+                                    if(response.body().success == 1)
+                                    {
+                                        Toast.makeText(Cart.this,"Thank you, Order Place",Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(Cart.this,"Failed !!!",Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                            }
+                        });
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
