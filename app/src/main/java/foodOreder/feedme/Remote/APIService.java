@@ -1,7 +1,7 @@
 package foodOreder.feedme.Remote;
 
+import foodOreder.feedme.Model.DataMessage;
 import foodOreder.feedme.Model.MyResponse;
-import foodOreder.feedme.Model.Sender;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
@@ -19,6 +19,6 @@ public interface APIService {
 
 
     @POST("fcm/send")
-    Call<MyResponse> sendNorification(@Body Sender body);
+    Call<MyResponse> sendNorification(@Body DataMessage body);
 
 }
