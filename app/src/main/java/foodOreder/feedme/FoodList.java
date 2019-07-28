@@ -19,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.facebook.CallbackManager;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
@@ -245,7 +246,7 @@ public class FoodList extends AppCompatActivity {
 
                 holder.foodName.setText(model.getName());
                 holder.foodPrice.setText(String.format("$ %s", model.getPrice().toString()));
-                Picasso.with(getApplicationContext()).load(model.getImage()).into(holder.foodImage);
+                Glide.with(getApplicationContext()).load(model.getImage()).centerCrop().placeholder(R.drawable.logo).into(holder.foodImage);
 
 
                 //Quick Cart
@@ -372,7 +373,7 @@ public class FoodList extends AppCompatActivity {
 
                 holder.foodName.setText(model.getName());
                 holder.foodPrice.setText(String.format("$ %s",model.getPrice().toString()));
-                Picasso.with(getApplicationContext()).load(model.getImage()).into(holder.foodImage);
+                Glide.with(getApplicationContext()).load(model.getImage()).centerCrop().placeholder(R.drawable.logo).into(holder.foodImage);
 
                 //Quick Cart
                 holder.quick_cart.setOnClickListener(new View.OnClickListener() {

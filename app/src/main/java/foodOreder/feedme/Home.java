@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andremion.counterfab.CounterFab;
+import com.bumptech.glide.Glide;
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -45,7 +46,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -280,7 +280,7 @@ public class Home extends AppCompatActivity
             @Override
             protected void onBindViewHolder(@NonNull MenuViewHolder holder, int position, @NonNull Category model) {
                 holder.txtMenuName.setText(model.getName());
-                Picasso.with(getApplicationContext()).load(model.getImage())
+                Glide.with(getApplicationContext()).load(model.getImage()).centerCrop().placeholder(R.drawable.logo)
                         .into(holder.imageView);
                 final Category clickItem = model;
                 holder.setItemClickListener(new ItemClickListener() {

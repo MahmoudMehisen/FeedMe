@@ -167,7 +167,7 @@ public class Cart extends AppCompatActivity
         mService = Common.getFCMService();
 
 
-        rootLayout = (RelativeLayout)findViewById(R.id.rootLayout);
+        rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
 
         turnGPSOn();
 
@@ -191,7 +191,6 @@ public class Cart extends AppCompatActivity
         Intent intent = new Intent(this, PayPalService.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
         startService(intent);
-
 
 
         database = FirebaseDatabase.getInstance();
@@ -288,7 +287,6 @@ public class Cart extends AppCompatActivity
         }
 
 
-
         alertDialog.setView(order_address_comment);
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
 
@@ -299,13 +297,10 @@ public class Cart extends AppCompatActivity
 
                 comment = edtComment.getText().toString();
 
-                if(rdiShipToAddress.isChecked())
-                {
+                if (rdiShipToAddress.isChecked()) {
                     latLocation = String.valueOf(mLastLocation.getLatitude());
                     lngLocation = String.valueOf(mLastLocation.getLongitude());
-                }
-                else if(rdiHomeAddress.isChecked())
-                {
+                } else if (rdiHomeAddress.isChecked()) {
                     latLocation = Common.currentUser.getHomeLat();
                     lngLocation = Common.currentUser.getHomeLng();
                 }
@@ -335,15 +330,12 @@ public class Cart extends AppCompatActivity
                     intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
                     intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
                     startActivityForResult(intent, PAYPAL_REQUEST_CODE);
-                }
-                else if(rdiFeedMeBalance.isChecked())
-                {
+                } else if (rdiFeedMeBalance.isChecked()) {
                     double amount = 0;
 
-                    try{
-                        amount = Common.formatCurrency(totalPrice.getText().toString(),Locale.US).doubleValue();
-                        if(Double.parseDouble(Common.currentUser.getBalance().toString()) >= amount)
-                        {
+                    try {
+                        amount = Common.formatCurrency(totalPrice.getText().toString(), Locale.US).doubleValue();
+                        if (Double.parseDouble(Common.currentUser.getBalance().toString()) >= amount) {
                             Request request = new Request(
                                     Common.currentUser.getPhone(),
                                     Common.currentUser.getName(),
@@ -360,20 +352,17 @@ public class Cart extends AppCompatActivity
 
                             double balance = Double.parseDouble(Common.currentUser.getBalance().toString()) - amount;
                             Common.currentUser.setBalance(balance);
-                            Map<String,Object> update_balance = new HashMap<>();
-                            update_balance.put("balance",balance);
+                            Map<String, Object> update_balance = new HashMap<>();
+                            update_balance.put("balance", balance);
                             FirebaseDatabase.getInstance()
                                     .getReference("Users")
                                     .child(Common.currentUser.getPhone())
                                     .updateChildren(update_balance);
 
+                        } else {
+                            Toast.makeText(Cart.this, "Your balance not enough, Please choose other payment", Toast.LENGTH_SHORT).show();
                         }
-                        else
-                        {
-                            Toast.makeText(Cart.this,"Your balance not enough, Please choose other payment",Toast.LENGTH_SHORT).show();
-                        }
-                    }catch (ParseException e)
-                    {
+                    } catch (ParseException e) {
                         e.printStackTrace();
                     }
 
@@ -383,17 +372,17 @@ public class Cart extends AppCompatActivity
 
                 if (Common.currentUser.getHomeLat().equals("0") && checkHome.isChecked()) {
 
-                            Common.currentUser.setHomeLat(String.valueOf(mLastLocation.getLatitude()));
-                            Common.currentUser.setHomeLng(String.valueOf(mLastLocation.getLongitude()));
-                            Map<String, Object> HomeLocation = new HashMap<>();
-                            HomeLocation.put("homeLat", Common.currentUser.getHomeLat());
-                            HomeLocation.put("homeLng", Common.currentUser.getHomeLng());
+                    Common.currentUser.setHomeLat(String.valueOf(mLastLocation.getLatitude()));
+                    Common.currentUser.setHomeLng(String.valueOf(mLastLocation.getLongitude()));
+                    Map<String, Object> HomeLocation = new HashMap<>();
+                    HomeLocation.put("homeLat", Common.currentUser.getHomeLat());
+                    HomeLocation.put("homeLng", Common.currentUser.getHomeLng());
 
 
-                            //make update
-                            DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users");
-                            user.child(Common.currentUser.getPhone())
-                                    .updateChildren(HomeLocation);
+                    //make update
+                    DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users");
+                    user.child(Common.currentUser.getPhone())
+                            .updateChildren(HomeLocation);
 
 
                 }
@@ -424,33 +413,28 @@ public class Cart extends AppCompatActivity
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Token serverToken = null;
-                for(DataSnapshot postSnapShot:dataSnapshot.getChildren())
-                {
+                for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
                     serverToken = postSnapShot.getValue(Token.class);
                 }
 
-                Map<String,String> dataSend = new HashMap<>();
-                dataSend.put("title","Feed Me");
-                dataSend.put("message","You have new order "+order_number);
-                DataMessage dataMessage = new DataMessage(serverToken.getToken(),dataSend);
+                Map<String, String> dataSend = new HashMap<>();
+                dataSend.put("title", "Feed Me");
+                dataSend.put("message", "You have new order " + order_number);
+                DataMessage dataMessage = new DataMessage(serverToken.getToken(), dataSend);
 
                 String test = new Gson().toJson(dataMessage);
-                Log.d("Content",test);
+                Log.d("Content", test);
 
                 mService.sendNorification(dataMessage)
                         .enqueue(new Callback<MyResponse>() {
                             @Override
                             public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                if(response.code() == 200)
-                                {
-                                    if(response.body().success == 1)
-                                    {
-                                        Toast.makeText(Cart.this,"Thank you, Order Place",Toast.LENGTH_SHORT).show();
+                                if (response.code() == 200) {
+                                    if (response.body().success == 1) {
+                                        Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
                                         finish();
-                                    }
-                                    else
-                                    {
-                                        Toast.makeText(Cart.this,"Failed !!!",Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(Cart.this, "Failed !!!", Toast.LENGTH_SHORT).show();
 
                                     }
                                 }
@@ -461,7 +445,6 @@ public class Cart extends AppCompatActivity
 
                             }
                         });
-
 
 
             }
@@ -497,7 +480,6 @@ public class Cart extends AppCompatActivity
                                 cart
                         );
                         requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
-
 
 
                     } catch (JSONException e) {
@@ -600,12 +582,11 @@ public class Cart extends AppCompatActivity
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if (viewHolder instanceof CartViewHolder)
-        {
+        if (viewHolder instanceof CartViewHolder) {
             String name = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition()).getProductName();
 
-           final Order deleteItem = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition());
-           final int deleteIndex = viewHolder.getAdapterPosition();
+            final Order deleteItem = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition());
+            final int deleteIndex = viewHolder.getAdapterPosition();
 
             adapter.removeItem(deleteIndex);
             new Database(getBaseContext()).removeFromCart(deleteItem.getProductId(), Common.currentUser.getPhone());
@@ -623,11 +604,11 @@ public class Cart extends AppCompatActivity
 
 
             // Make Snackbar
-            Snackbar snackbar = Snackbar.make(rootLayout,name +" removed from cart!",Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(rootLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
             snackbar.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    adapter.restoreItem(deleteItem,deleteIndex);
+                    adapter.restoreItem(deleteItem, deleteIndex);
                     new Database(getApplicationContext()).addToCart(deleteItem);
 
                     //update txttotal
@@ -646,18 +627,17 @@ public class Cart extends AppCompatActivity
             snackbar.show();
 
 
-
         }
 
     }
 
-    private void turnGPSOn(){
+    private void turnGPSOn() {
 
-        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE );
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-        if(!statusOfGPS) {
-            Toast.makeText(getApplicationContext(),"Open Gps to get Your location",Toast.LENGTH_SHORT).show();
+        if (!statusOfGPS) {
+            Toast.makeText(getApplicationContext(), "Open Gps to get Your location", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
         }

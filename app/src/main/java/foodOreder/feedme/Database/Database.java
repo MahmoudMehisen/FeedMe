@@ -35,7 +35,9 @@ public class Database extends SQLiteAssetHelper {
         } else {
             flag = false;
         }
-        cursor.close();
+        cursor.close();        db.close();
+
+
         return flag;
     }
 
@@ -67,6 +69,8 @@ public class Database extends SQLiteAssetHelper {
             } while (c.moveToNext());
 
         }
+        db.close();
+
         return result;
     }
 
@@ -81,6 +85,8 @@ public class Database extends SQLiteAssetHelper {
                 order.getDiscount(),
                 order.getImage());
         db.execSQL(query);
+        db.close();
+
 
 
     }
@@ -89,6 +95,8 @@ public class Database extends SQLiteAssetHelper {
         SQLiteDatabase db = getReadableDatabase();
         String query = String.format("DELETE FROM OrderDetail WHERE UserPhone = '%s'", userPhone);
         db.execSQL(query);
+        db.close();
+
     }
 
     public int getCountCart(String userPhone) {
@@ -102,6 +110,8 @@ public class Database extends SQLiteAssetHelper {
                 count = cursor.getInt(0);
             } while (cursor.moveToNext());
         }
+        db.close();
+
         return count;
     }
 
@@ -109,12 +119,16 @@ public class Database extends SQLiteAssetHelper {
         SQLiteDatabase db = getReadableDatabase();
         String query = String.format("UPDATE OrderDetail SET Quantity= '%s' WHERE UserPhone = '%s' AND ProductId = '%s'", order.getQuantity(), order.getUserPhone(), order.getProductId());
         db.execSQL(query);
+        db.close();
+
     }
 
     public void IncreaseCart(String userPhone, String FoodId) {
         SQLiteDatabase db = getReadableDatabase();
         String query = String.format("UPDATE OrderDetail SET Quantity = Quantity+1 WHERE UserPhone = '%s' AND ProductId = '%s'", userPhone, FoodId);
         db.execSQL(query);
+        db.close();
+
     }
 
 
@@ -132,12 +146,15 @@ public class Database extends SQLiteAssetHelper {
                 food.getFoodImage()
         );
         db.execSQL(query);
+        db.close();
     }
 
     public void RemoveFromFavorites(String foodId, String userPhone) {
         SQLiteDatabase db = getReadableDatabase();
         String query = String.format("DELETE FROM Favorites WHERE FoodId ='%s' and UserPhone = '%s';", foodId, userPhone);
         db.execSQL(query);
+        db.close();
+
     }
 
     public boolean isFavorites(String foodId, String userPhone) {
@@ -157,6 +174,8 @@ public class Database extends SQLiteAssetHelper {
         SQLiteDatabase db = getReadableDatabase();
         String query = String.format("DELETE FROM OrderDetail WHERE UserPhone = '%s' and ProductId='%s'", phone, productId);
         db.execSQL(query);
+        db.close();
+
     }
 
     public List<Favorites> getAllFavorites(String userPhone) {
@@ -188,6 +207,8 @@ public class Database extends SQLiteAssetHelper {
             } while (c.moveToNext());
 
         }
+        db.close();
+
         return result;
     }
 

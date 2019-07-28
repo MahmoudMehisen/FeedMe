@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andremion.counterfab.CounterFab;
+import com.bumptech.glide.Glide;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,7 +23,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
@@ -205,7 +205,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 currentFood = dataSnapshot.getValue(Food.class);
 
-                Picasso.with(getApplicationContext()).load(currentFood.getImage()).into(foodImage);
+                Glide.with(getApplicationContext()).load(currentFood.getImage()).centerCrop().placeholder(R.drawable.logo).into(foodImage);
                 collapsingToolbarLayout.setTitle(currentFood.getName());
                 foodPrice.setText(currentFood.getPrice());
                 foodDescription.setText(currentFood.getDescription());

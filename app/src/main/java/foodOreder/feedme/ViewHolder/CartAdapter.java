@@ -1,21 +1,13 @@
 package foodOreder.feedme.ViewHolder;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
+import com.bumptech.glide.Glide;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
-import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -25,7 +17,6 @@ import java.util.Locale;
 import foodOreder.feedme.Cart;
 import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.Database.Database;
-import foodOreder.feedme.Interface.ItemClickListener;
 import foodOreder.feedme.Model.Order;
 import foodOreder.feedme.R;
 
@@ -54,10 +45,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder cartViewHolder, final int i) {
 
-        Picasso.with(cart.getBaseContext())
+        Glide.with(cart.getBaseContext())
                 .load(listData.get(i).getImage())
-                .resize(70, 70)
                 .centerCrop()
+                .placeholder(R.drawable.logo)
                 .into(cartViewHolder.cart_image);
 
         cartViewHolder.btn_quantity.setNumber(listData.get(i).getQuantity());
