@@ -24,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -285,28 +284,6 @@ public class Cart extends AppCompatActivity
         }
 
 
-        rdiShipToAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-
-                    latLocation = String.valueOf(mLastLocation.getLatitude());
-                    lngLocation = String.valueOf(mLastLocation.getLongitude());
-
-                }
-            }
-        });
-
-        rdiHomeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    latLocation = Common.currentUser.getHomeLat();
-                    lngLocation = Common.currentUser.getHomeLng();
-                }
-            }
-        });
-
         alertDialog.setView(order_address_comment);
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
 
@@ -316,6 +293,16 @@ public class Cart extends AppCompatActivity
 
 
                 comment = edtComment.getText().toString();
+
+                if(rdiShipToAddress.isChecked())
+                {
+                    latLocation = String.valueOf(mLastLocation.getLatitude());
+                    lngLocation = String.valueOf(mLastLocation.getLongitude());
+                }
+                else if(rdiHomeAddress.isChecked()) {
+                    latLocation = Common.currentUser.getHomeLat();
+                    lngLocation = Common.currentUser.getHomeLng();
+                }
 
                 if (rdiCOD.isChecked()) {
 
