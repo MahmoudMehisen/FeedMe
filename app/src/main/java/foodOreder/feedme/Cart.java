@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -211,8 +209,6 @@ public class Cart extends AppCompatActivity
 
 
         loadListFood();
-        turnGPSOn();
-
 
         btnPlace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -660,17 +656,5 @@ public class Cart extends AppCompatActivity
 
         }
 
-    }
-
-    private void turnGPSOn(){
-
-        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE );
-        boolean statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-        if(!statusOfGPS) {
-            Toast.makeText(getApplicationContext(),"Open Gps to get Your location",Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
-        }
     }
 }
