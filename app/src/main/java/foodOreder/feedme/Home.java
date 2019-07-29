@@ -470,6 +470,4 @@ public class Home extends AppCompatActivity
         alertDialog.show();
 
     }
-
-
 }

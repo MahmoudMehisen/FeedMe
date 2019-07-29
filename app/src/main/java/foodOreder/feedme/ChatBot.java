@@ -37,6 +37,7 @@ import ai.api.android.AIService;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
+import foodOreder.feedme.Common.Common;
 import foodOreder.feedme.ViewHolder.ChatViewHolder;
 import foodOreder.feedme.Model.ChatMessage;
 
@@ -68,7 +69,7 @@ public class ChatBot extends AppCompatActivity implements AIListener {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        ref = FirebaseDatabase.getInstance().getReference();
+        ref = FirebaseDatabase.getInstance().getReference("Chat");
         ref.keepSynced(true);
 
         final AIConfiguration config = new AIConfiguration("c0fe194c25f947dfbb2675f127c6ce32",
@@ -80,7 +81,7 @@ public class ChatBot extends AppCompatActivity implements AIListener {
 
 
         options = new FirebaseRecyclerOptions.Builder<ChatMessage>()
-                .setQuery(ref.child("chat"), ChatMessage.class)
+                .setQuery(ref.child(Common.currentUser.getPhone()), ChatMessage.class)
                 .build();
 
         final AIDataService aiDataService = new AIDataService(config);
@@ -97,7 +98,7 @@ public class ChatBot extends AppCompatActivity implements AIListener {
                 if (!message.equals("")) {
 
                     ChatMessage chatMessage = new ChatMessage(message, "User");
-                    ref.child("chat").push().setValue(chatMessage);
+                    ref.child(Common.currentUser.getPhone()).push().setValue(chatMessage);
 
                     aiRequest.setQuery(message);
                     new AsyncTask<AIRequest, Void, AIResponse>() {
@@ -120,7 +121,7 @@ public class ChatBot extends AppCompatActivity implements AIListener {
                                 Result result = response.getResult();
                                 String reply = result.getFulfillment().getSpeech();
                                 ChatMessage chatMessage = new ChatMessage(reply, "bot");
-                                ref.child("chat").push().setValue(chatMessage);
+                                ref.child(Common.currentUser.getPhone()).push().setValue(chatMessage);
                             }
                         }
                     }.execute(aiRequest);
@@ -262,12 +263,12 @@ public class ChatBot extends AppCompatActivity implements AIListener {
 
         String message = result.getResolvedQuery();
         ChatMessage chatMessage0 = new ChatMessage(message, "User");
-        ref.child("chat").push().setValue(chatMessage0);
+        ref.child(Common.currentUser.getPhone()).push().setValue(chatMessage0);
 
 
         String reply = result.getFulfillment().getSpeech();
         ChatMessage chatMessage = new ChatMessage(reply, "bot");
-        ref.child("chat").push().setValue(chatMessage);
+        ref.child(Common.currentUser.getPhone()).push().setValue(chatMessage);
 
 
     }
