@@ -47,7 +47,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoriteViewHolder> {
         favoriteViewHolder.foodName.setText(favorites.get(pos).getFoodName());
         favoriteViewHolder.foodPrice.setText(String.format("$ %s",favorites.get(pos).getFoodPrice().toString()));
                 System.out.println(favorites.get(pos).getFoodImage());
-                Glide.with(context).load(favorites.get(pos).getFoodImage()).centerCrop().placeholder(R.drawable.logo).into(favoriteViewHolder.foodImage);
+                Glide.with(context).load(favorites.get(pos).getFoodImage()).centerCrop().placeholder(R.drawable.placeholder).into(favoriteViewHolder.foodImage);
 
                 //Quick Cart
         favoriteViewHolder.quick_cart.setOnClickListener(new View.OnClickListener() {

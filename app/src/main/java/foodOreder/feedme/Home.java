@@ -280,7 +280,7 @@ public class Home extends AppCompatActivity
             @Override
             protected void onBindViewHolder(@NonNull MenuViewHolder holder, int position, @NonNull Category model) {
                 holder.txtMenuName.setText(model.getName());
-                Glide.with(getApplicationContext()).load(model.getImage()).centerCrop().placeholder(R.drawable.logo)
+                Glide.with(getApplicationContext()).load(model.getImage()).centerCrop().placeholder(R.drawable.placeholder)
                         .into(holder.imageView);
                 final Category clickItem = model;
                 holder.setItemClickListener(new ItemClickListener() {

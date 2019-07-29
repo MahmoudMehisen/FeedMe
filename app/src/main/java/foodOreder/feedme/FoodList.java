@@ -246,7 +246,7 @@ public class FoodList extends AppCompatActivity {
 
                 holder.foodName.setText(model.getName());
                 holder.foodPrice.setText(String.format("$ %s", model.getPrice().toString()));
-                Glide.with(getApplicationContext()).load(model.getImage()).centerCrop().placeholder(R.drawable.logo).into(holder.foodImage);
+                Glide.with(getApplicationContext()).load(model.getImage()).centerCrop().placeholder(R.drawable.placeholder).into(holder.foodImage);
 
 
                 //Quick Cart
@@ -276,7 +276,7 @@ public class FoodList extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Picasso.with(getApplicationContext())
-                                .load(model.getImage())
+                                .load(model.getImage()).placeholder(R.drawable.placeholder)
                                 .into(target);
                     }
                 });
@@ -373,7 +373,7 @@ public class FoodList extends AppCompatActivity {
 
                 holder.foodName.setText(model.getName());
                 holder.foodPrice.setText(String.format("$ %s",model.getPrice().toString()));
-                Glide.with(getApplicationContext()).load(model.getImage()).centerCrop().placeholder(R.drawable.logo).into(holder.foodImage);
+                Glide.with(getApplicationContext()).load(model.getImage()).centerCrop().placeholder(R.drawable.placeholder).into(holder.foodImage);
 
                 //Quick Cart
                 holder.quick_cart.setOnClickListener(new View.OnClickListener() {
@@ -409,7 +409,7 @@ public class FoodList extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Picasso.with(getApplicationContext())
-                                .load(model.getImage())
+                                .load(model.getImage()).placeholder(R.drawable.placeholder)
                                 .into(target);
                     }
                 });

@@ -48,7 +48,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         Glide.with(cart.getBaseContext())
                 .load(listData.get(i).getImage())
                 .centerCrop()
-                .placeholder(R.drawable.logo)
+                .placeholder(R.drawable.placeholder)
                 .into(cartViewHolder.cart_image);
 
         cartViewHolder.btn_quantity.setNumber(listData.get(i).getQuantity());

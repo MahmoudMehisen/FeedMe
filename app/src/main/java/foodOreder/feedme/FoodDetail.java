@@ -205,7 +205,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 currentFood = dataSnapshot.getValue(Food.class);
 
-                Glide.with(getApplicationContext()).load(currentFood.getImage()).centerCrop().placeholder(R.drawable.logo).into(foodImage);
+                Glide.with(getApplicationContext()).load(currentFood.getImage()).centerCrop().placeholder(R.drawable.placeholder).into(foodImage);
                 collapsingToolbarLayout.setTitle(currentFood.getName());
                 foodPrice.setText(currentFood.getPrice());
                 foodDescription.setText(currentFood.getDescription());
