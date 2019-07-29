@@ -16,6 +16,11 @@
             android:icon="@drawable/ic_favorite_black_24dp"
             android:title="Favorites"
             android:iconTint="@android:color/white"/>
+        <item
+            android:id="@+id/nav_chat"
+            android:icon="@drawable/ic_chat_black_24dp"
+            android:title="Chat Bot"
+            android:iconTint="@android:color/white"/>
 
 
         <item

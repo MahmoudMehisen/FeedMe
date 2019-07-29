@@ -67,7 +67,7 @@ public class Home extends AppCompatActivity
 
     FirebaseDatabase database;
     DatabaseReference category;
-    TextView txtFullName;
+    TextView txtFullName,txtFullPhone;
     RecyclerView recycler_menu;
     RecyclerView.LayoutManager layoutManager;
     FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
@@ -156,6 +156,8 @@ public class Home extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         txtFullName = (TextView) headerView.findViewById(R.id.txtFullName);
         txtFullName.setText(Common.currentUser.getName());
+        txtFullPhone = (TextView)headerView.findViewById(R.id.txtFullPhone);
+        txtFullPhone.setText(Common.currentUser.getPhone());
 
 
         //Load Menu
@@ -367,6 +369,10 @@ public class Home extends AppCompatActivity
         else if(id == R.id.nav_fav)
         {
             startActivity(new Intent(Home.this,FavoriteActivity.class));
+        }
+        else if(id == R.id.nav_chat)
+        {
+            startActivity(new Intent(Home.this,ChatBot.class));
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
