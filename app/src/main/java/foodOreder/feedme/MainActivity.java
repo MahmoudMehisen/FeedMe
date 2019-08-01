@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onError(AccountKitError accountKitError) {
-
+                    waitingDailg.dismiss();
                 }
             });
         }
