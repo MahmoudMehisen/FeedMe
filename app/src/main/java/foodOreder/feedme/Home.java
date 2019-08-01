@@ -125,7 +125,7 @@ public class Home extends AppCompatActivity
                     loadMenu();
                 } else {
                     Toast.makeText(getApplicationContext(), "Please Check Your Internet Connection !!", Toast.LENGTH_SHORT).show();
-                    return;
+                    swipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
@@ -136,7 +136,7 @@ public class Home extends AppCompatActivity
                     loadMenu();
                 } else {
                     Toast.makeText(getApplicationContext(), "Please Check Your Internet Connection !!", Toast.LENGTH_SHORT).show();
-                    return;
+                    swipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
