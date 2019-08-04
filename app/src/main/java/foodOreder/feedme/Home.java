@@ -79,6 +79,7 @@ public class Home extends AppCompatActivity
 
     HashMap<String, String> imageList;
     SliderLayout mSlider;
+    DrawerLayout drawerLayout;
 
 
     @Override
@@ -97,10 +98,15 @@ public class Home extends AppCompatActivity
         );
 
 
+
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Menu");
         setSupportActionBar(toolbar);
+
+
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        drawerLayout.setBackground(getResources().getDrawable(R.drawable.background));
 
         //Init Firebase
         database = FirebaseDatabase.getInstance();
@@ -468,6 +474,14 @@ public class Home extends AppCompatActivity
             }
         });
         alertDialog.show();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        System.out.println(drawerLayout.getBackground().getBounds().width());
+        System.out.println(drawerLayout.getBackground().getBounds().height());
 
     }
 }
